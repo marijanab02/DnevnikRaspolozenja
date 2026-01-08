@@ -2,6 +2,7 @@ package com.example.dnevnikraspolozenja.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,29 +14,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.dnevnikraspolozenja.R;
 import com.example.dnevnikraspolozenja.api.ApiCallback;
 import com.example.dnevnikraspolozenja.api.RetrofitClient;
-import com.example.dnevnikraspolozenja.models.request.LoginRequest;
+import com.example.dnevnikraspolozenja.models.request.RegisterRequest;
 import com.example.dnevnikraspolozenja.models.response.AuthResponse;
 import com.example.dnevnikraspolozenja.utils.AuthManager;
 
-public class LoginActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
-    private EditText emailInput, passwordInput;
-    private Button loginBtn, registerBtn;
+    private EditText emailInput, passwordInput, confirmPasswordInput;
+    private Button registerBtn;
     private ProgressBar progressBar;
     private AuthManager authManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
 
         authManager = new AuthManager(this);
-
-        // Ako je korisnik već prijavljen → preskoči login
-        if (authManager.isLoggedIn()) {
-            goToMain();
-            return;
-        }
 
         initViews();
         setupListeners();
@@ -44,74 +39,90 @@ public class LoginActivity extends AppCompatActivity {
     private void initViews() {
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
-        loginBtn = findViewById(R.id.loginBtn);
-        registerBtn = findViewById(R.id.openRegisterBtn);
+        confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
+        registerBtn = findViewById(R.id.registerBtn);
         progressBar = findViewById(R.id.progressBar);
     }
 
     private void setupListeners() {
-        loginBtn.setOnClickListener(v -> loginUser());
-
-        registerBtn.setOnClickListener(v ->
-                startActivity(new Intent(this, RegisterActivity.class))
-        );
+        registerBtn.setOnClickListener(v -> registerUser());
     }
 
-    private void loginUser() {
+    private void registerUser() {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
+        String confirmPassword = confirmPasswordInput.getText().toString().trim();
 
-        if (!validateInput(email, password)) return;
+        if (!validateInput(email, password, confirmPassword)) return;
 
         setLoading(true);
 
-        LoginRequest request = new LoginRequest(email, password);
+        RegisterRequest request = new RegisterRequest(email, password);
 
         RetrofitClient.getInstance()
                 .getApi()
-                .login(request)
+                .signup(request)
                 .enqueue(new ApiCallback<AuthResponse>() {
                     @Override
                     public void onSuccess(AuthResponse response) {
                         setLoading(false);
-                        handleLoginSuccess(response);
+                        handleRegisterSuccess(response);
                     }
 
                     @Override
                     public void onError(String errorMessage) {
                         setLoading(false);
-                        Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private boolean validateInput(String email, String password) {
+    private boolean validateInput(String email, String password, String confirmPassword) {
         if (email.isEmpty()) {
             emailInput.setError("Unesite email");
             return false;
         }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailInput.setError("Neispravan email");
+            return false;
+        }
+
         if (password.isEmpty()) {
             passwordInput.setError("Unesite lozinku");
             return false;
         }
+
+        if (password.length() < 6) {
+            passwordInput.setError("Lozinka mora imati barem 6 znakova");
+            return false;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            confirmPasswordInput.setError("Lozinke se ne podudaraju");
+            return false;
+        }
+
         return true;
     }
 
-    private void handleLoginSuccess(AuthResponse response) {
+    private void handleRegisterSuccess(AuthResponse response) {
         authManager.saveToken(response.getAccessToken());
         authManager.saveEmail(response.getUser().getEmail());
 
-        Toast.makeText(this, "Uspješna prijava!", Toast.LENGTH_SHORT).show();
-        goToMain();
-    }
+        Toast.makeText(this, "Registracija uspješna!", Toast.LENGTH_SHORT).show();
 
-    private void goToMain() {
-        startActivity(new Intent(this, DashboardActivity.class));
+        Intent intent = new Intent(this, DashboardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         finish();
     }
 
     private void setLoading(boolean isLoading) {
         progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-        loginBtn.setEnabled(!isLoading);
+        registerBtn.setEnabled(!isLoading);
+        emailInput.setEnabled(!isLoading);
+        passwordInput.setEnabled(!isLoading);
+        confirmPasswordInput.setEnabled(!isLoading);
     }
 }
