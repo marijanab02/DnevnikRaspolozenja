@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="60dp"
+    android:viewportWidth="100"
+    android:viewportHeight="60">
+
+    <!-- Oblak glavni -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M20,30
+            Q15,10 40,15
+            Q50,0 70,20
+            Q90,10 80,30
+            Q100,40 70,50
+            Q50,60 30,50
+            Q0,50 20,30 Z"
+        android:alpha="0.6"/>
+</vector>
