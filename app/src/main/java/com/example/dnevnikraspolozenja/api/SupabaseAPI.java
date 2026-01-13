@@ -9,6 +9,11 @@ import com.example.dnevnikraspolozenja.models.request.ProfileUpdateRequest;
 import com.example.dnevnikraspolozenja.models.response.ProfileResponse;
 
 
+import com.example.dnevnikraspolozenja.models.response.MoodEntryResponse;
+import com.example.dnevnikraspolozenja.models.request.CreateMoodRequest;
+import com.example.dnevnikraspolozenja.models.request.UpdateMoodRequest;
+
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -18,25 +23,26 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.DELETE;
 
 public interface SupabaseAPI {
     @Headers("Content-Type: application/json")
+
+
     @POST("auth/v1/token?grant_type=password")
     Call<AuthResponse> login(@Body LoginRequest request);
-
-
-
 
     @POST("auth/v1/signup")
     Call<AuthResponse> signup(@Body RegisterRequest request);
 
+
+
+
     @GET("rest/v1/profile")
     Call<ProfileResponse[]> getProfile(
             @Header("Authorization") String token,
-            //@Header("apikey") String apiKey,
             @Query("id") String idFilter  // eq. ide u EditProfileActivity
     );
-
 
     @PATCH("rest/v1/profile")
     Call<ProfileResponse> updateProfile(
@@ -47,4 +53,39 @@ public interface SupabaseAPI {
     );
 
 
+
+
+
+    @GET("rest/v1/mood_entries")
+    Call<MoodEntryResponse[]> getMoodEntries(
+            @Header("Authorization") String token,
+            @Query("user_id") String userIdFilter,
+            @Query("order") String order,
+            @Query("deleted") String deletedFilter
+
+    );
+
+
+    @POST("rest/v1/mood_entries")
+    Call<Void> createMoodEntry(
+            @Header("Authorization") String token,
+            @Body CreateMoodRequest request
+    );
+
+
+    @DELETE("rest/v1/mood_entries")
+    Call<Void> deleteMoodEntry(
+            @Header("Authorization") String token,
+            @Query("id") String idFilter
+    );
+
+
+
+
+    @PATCH("rest/v1/mood_entries")
+    Call<Void> softDeleteMood(
+            @Header("Authorization") String token,
+            @Query("id") String idFilter,
+            @Body UpdateMoodRequest request
+    );
 }
