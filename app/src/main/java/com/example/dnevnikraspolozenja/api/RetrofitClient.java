@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 public class RetrofitClient {
 
     private static RetrofitClient instance;
@@ -15,13 +16,20 @@ public class RetrofitClient {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(chain -> chain.proceed(
-                        chain.request().newBuilder()
-                                .addHeader("apikey", Constants.ANON_KEY)
-                                .addHeader("Authorization", "Bearer " + Constants.ANON_KEY)
-                                .addHeader("Content-Type", "application/json")
-                                .build()
-                ))
+                .addInterceptor(chain -> {
+                    okhttp3.Request original = chain.request();
+                    okhttp3.Request.Builder builder = original.newBuilder()
+                            .addHeader("apikey", Constants.ANON_KEY)
+                            .addHeader("Content-Type", "application/json");
+
+
+                    if (original.header("Authorization") == null) {
+                        builder.addHeader("Authorization", "Bearer " + Constants.ANON_KEY);
+                    }
+
+
+                    return chain.proceed(builder.build());
+                })
                 .addInterceptor(logging)
                 .build();
 

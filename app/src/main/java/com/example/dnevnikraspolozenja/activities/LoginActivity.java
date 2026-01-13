@@ -2,6 +2,7 @@ package com.example.dnevnikraspolozenja.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -100,6 +101,8 @@ public class LoginActivity extends AppCompatActivity {
     private void handleLoginSuccess(AuthResponse response) {
         authManager.saveToken(response.getAccessToken());
         authManager.saveEmail(response.getUser().getEmail());
+        authManager.saveUserId(response.getUser().getId());
+
 
         Toast.makeText(this, "Uspješna prijava!", Toast.LENGTH_SHORT).show();
         goToMain();
