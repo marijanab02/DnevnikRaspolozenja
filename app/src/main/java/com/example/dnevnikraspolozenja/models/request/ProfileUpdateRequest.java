@@ -9,4 +9,12 @@ public class ProfileUpdateRequest {
         this.full_name = full_name;
         this.date_of_birth = date_of_birth;
     }
+
+    public String getFull_name() {
+        return full_name;
+    }
+
+    public String getDate_of_birth() {
+        return date_of_birth;
+    }
 }

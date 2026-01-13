@@ -15,7 +15,7 @@ public class DashboardActivity extends AppCompatActivity {
     private AuthManager authManager;
     private TextView welcomeText;
     private Button logoutBtn;
-
+    private Button editProfileBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +25,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         welcomeText = findViewById(R.id.welcomeText);
         logoutBtn = findViewById(R.id.logoutBtn);
+        editProfileBtn = findViewById(R.id.editProfileBtn);
 
         // Dohvati email i prikaži korisničko ime
         String email = authManager.getEmail();
@@ -34,6 +35,11 @@ public class DashboardActivity extends AppCompatActivity {
         }
         welcomeText.setText("Dobrodošli, " + username);
 
+
+        editProfileBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, EditProfileActivity.class);
+            startActivity(intent);
+        });
         // Logout
         logoutBtn.setOnClickListener(v -> {
             authManager.logout();
