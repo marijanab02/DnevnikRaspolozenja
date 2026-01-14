@@ -5,6 +5,16 @@ public class ProfileResponse {
     private String full_name;
     private String date_of_birth;
 
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getId() {
         return id;
     }
@@ -16,4 +26,5 @@ public class ProfileResponse {
     public String getDate_of_birth() {
         return date_of_birth;
     }
+
 }

@@ -16,6 +16,7 @@ import com.example.dnevnikraspolozenja.api.ApiCallback;
 import com.example.dnevnikraspolozenja.api.RetrofitClient;
 import com.example.dnevnikraspolozenja.models.request.LoginRequest;
 import com.example.dnevnikraspolozenja.models.response.AuthResponse;
+import com.example.dnevnikraspolozenja.models.response.ProfileResponse;
 import com.example.dnevnikraspolozenja.utils.AuthManager;
 
 public class LoginActivity extends AppCompatActivity {
@@ -105,12 +106,43 @@ public class LoginActivity extends AppCompatActivity {
 
 
         Toast.makeText(this, "Uspješna prijava!", Toast.LENGTH_SHORT).show();
-        goToMain();
+        fetchUserRoleAndRedirect();
     }
 
     private void goToMain() {
         startActivity(new Intent(this, DashboardActivity.class));
         finish();
+    }
+    private void fetchUserRoleAndRedirect() {
+        String token = "Bearer " + authManager.getToken();
+        String userId = authManager.getUserId();
+        String filter = "eq." + userId;
+
+        RetrofitClient.getInstance()
+                .getApi()
+                .getProfile(token, filter)
+                .enqueue(new ApiCallback<ProfileResponse[]>() {
+                    @Override
+                    public void onSuccess(ProfileResponse[] response) {
+                        if (response != null && response.length > 0) {
+                            String role = response[0].getRole();
+
+                            if ("admin".equals(role)) {
+                                startActivity(new Intent(LoginActivity.this, AdminDashboardActivity.class));
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                            }
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        Toast.makeText(LoginActivity.this,
+                                "Greška pri dohvaćanju role",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void setLoading(boolean isLoading) {

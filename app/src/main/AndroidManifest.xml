@@ -29,6 +29,13 @@
             android:name=".activities.DashboardActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.AddMentalTaskActivity"
+            android:exported="false" />
+        <activity android:name=".activities.AdminDashboardActivity"
+            android:exported="false" />
+        <activity android:name=".activities.MentalTaskListActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
