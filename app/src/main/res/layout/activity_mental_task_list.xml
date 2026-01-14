@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    android:background="#B3E5FC"
+    tools:context=".activities.MentalTasksActivity">
+
+    <!-- Oblaci pozadine -->
+    <ImageView
+        android:id="@+id/cloud_bg1"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
+        android:alpha="0.3"
+        android:rotation="10"
+        android:scaleType="fitXY"
+        android:src="@drawable/cloud"
+        android:translationX="50dp"
+        android:translationY="-30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ImageView
+        android:id="@+id/cloud_bg2"
+        android:layout_width="150dp"
+        android:layout_height="90dp"
+        android:alpha="0.25"
+        android:rotation="-5"
+        android:scaleType="fitXY"
+        android:src="@drawable/cloud"
+        android:translationX="-30dp"
+        android:translationY="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/cloud_bg3"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:alpha="0.2"
+        android:rotation="15"
+        android:scaleType="fitXY"
+        android:src="@drawable/cloud"
+        android:translationX="-50dp"
+        android:translationY="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Naslov stranice -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mentalni zadaci"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#0288D1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- RecyclerView za listu zadataka -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMentalTasks"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,14 @@
 package com.example.dnevnikraspolozenja.api;
 
+import com.example.dnevnikraspolozenja.models.MentalTask;
+import com.example.dnevnikraspolozenja.models.request.CreateMentalTaskRequest;
 import com.example.dnevnikraspolozenja.models.request.RegisterRequest;
 
 import com.example.dnevnikraspolozenja.models.request.LoginRequest;
 import com.example.dnevnikraspolozenja.models.response.AuthResponse;
 
 import com.example.dnevnikraspolozenja.models.request.ProfileUpdateRequest;
+import com.example.dnevnikraspolozenja.models.response.MentalTaskResponse;
 import com.example.dnevnikraspolozenja.models.response.ProfileResponse;
 
 
@@ -13,6 +16,8 @@ import com.example.dnevnikraspolozenja.models.response.MoodEntryResponse;
 import com.example.dnevnikraspolozenja.models.request.CreateMoodRequest;
 import com.example.dnevnikraspolozenja.models.request.UpdateMoodRequest;
 
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -87,5 +92,27 @@ public interface SupabaseAPI {
             @Header("Authorization") String token,
             @Query("id") String idFilter,
             @Body UpdateMoodRequest request
+    );
+
+    @GET("rest/v1/mental_tasks")
+    Call<MentalTaskResponse[]> getMentalTasks(
+            @Header("Authorization") String token,
+            @Query("order") String order
+    );
+
+    @POST("rest/v1/mental_tasks")
+    Call<Void> createMentalTask(
+            @Header("Authorization") String token,
+            @Body CreateMentalTaskRequest request
+    );
+
+    @DELETE("rest/v1/mental_tasks")
+    Call<Void> deleteMentalTask(
+            @Header("Authorization") String token,
+            @Query("id") String idFilter
+    );
+    @GET("rest/v1/mental_tasks")
+    Call<List<MentalTask>> getMentalTasks(
+            @Header("Authorization") String token
     );
 }
