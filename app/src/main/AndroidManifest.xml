@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DnevnikRaspolozenja">
         <activity
+            android:name=".activities.MoodListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CreateMoodActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.EditProfileActivity"
             android:exported="false" />
         <activity
