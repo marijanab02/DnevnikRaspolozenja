@@ -1,14 +1,20 @@
 package com.example.dnevnikraspolozenja.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 public class CreateMentalTaskRequest {
+
     private String title;
     private String description;
-    private int mood_level;
 
-    public CreateMentalTaskRequest(String title, String description, int mood_level) {
+    @SerializedName("mood_levels")
+    private List<Integer> moodLevel;
+
+    public CreateMentalTaskRequest(String title, String description, List<Integer> moodLevel) {
         this.title = title;
         this.description = description;
-        this.mood_level = mood_level;
+        this.moodLevel = moodLevel;
     }
-
 }

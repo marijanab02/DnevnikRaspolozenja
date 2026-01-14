@@ -48,8 +48,11 @@ public class MentalTaskListActivity extends AppCompatActivity {
                     public void onResponse(Call<List<MentalTask>> call,
                                            Response<List<MentalTask>> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            recyclerView.setAdapter(
-                                    new MentalTaskAdapter(response.body()));
+                            MentalTaskAdapter adapter = new MentalTaskAdapter(
+                                    response.body(),
+                                    (task, position) -> deleteTask(task, position)
+                            );
+                            recyclerView.setAdapter(adapter);
                         }
                     }
 
@@ -57,6 +60,37 @@ public class MentalTaskListActivity extends AppCompatActivity {
                     public void onFailure(Call<List<MentalTask>> call, Throwable t) {
                         Toast.makeText(MentalTaskListActivity.this,
                                 "Greška pri dohvaćanju taskova",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void deleteTask(MentalTask task, int position) {
+        String token = "Bearer " + authManager.getToken();
+
+        RetrofitClient.getInstance()
+                .getApi()
+                .deleteMentalTask(token, "eq." + task.getId())
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(MentalTaskListActivity.this,
+                                    "Task obrisan", Toast.LENGTH_SHORT).show();
+                            // Ukloni iz RecyclerView
+                            ((MentalTaskAdapter) recyclerView.getAdapter())
+                                    .tasks.remove(position);
+                            recyclerView.getAdapter().notifyItemRemoved(position);
+                        } else {
+                            Toast.makeText(MentalTaskListActivity.this,
+                                    "Greška pri brisanju: " + response.code(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(MentalTaskListActivity.this,
+                                "Greška: " + t.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

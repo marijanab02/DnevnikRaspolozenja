@@ -4,7 +4,7 @@ public class MentalTaskResponse {
     private long id;
     private String title;
     private String description;
-    private int mood_level;
+    private int moodLevel;
     private String created_at;
 
     public long getId() {
@@ -31,12 +31,12 @@ public class MentalTaskResponse {
         this.description = description;
     }
 
-    public int getMood_level() {
-        return mood_level;
+    public int getMoodLevel() {
+        return moodLevel;
     }
 
-    public void setMood_level(int mood_level) {
-        this.mood_level = mood_level;
+    public void setMoodLevel(int moodLevel) {
+        this.moodLevel = moodLevel;
     }
 
     public String getCreated_at() {

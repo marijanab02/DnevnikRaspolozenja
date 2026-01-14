@@ -94,28 +94,24 @@ public interface SupabaseAPI {
             @Body UpdateMoodRequest request
     );
 
-    // GET svi taskovi (admin i user)
     @GET("rest/v1/mental_tasks")
     Call<MentalTaskResponse[]> getMentalTasks(
             @Header("Authorization") String token,
             @Query("order") String order
     );
 
-    // CREATE task (ADMIN)
     @POST("rest/v1/mental_tasks")
     Call<Void> createMentalTask(
             @Header("Authorization") String token,
             @Body CreateMentalTaskRequest request
     );
 
-    // DELETE task (ADMIN)
     @DELETE("rest/v1/mental_tasks")
     Call<Void> deleteMentalTask(
             @Header("Authorization") String token,
             @Query("id") String idFilter
     );
-
-    @GET("mental_tasks")
+    @GET("rest/v1/mental_tasks")
     Call<List<MentalTask>> getMentalTasks(
             @Header("Authorization") String token
     );
