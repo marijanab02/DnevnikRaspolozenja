@@ -298,20 +298,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
 
-    <!-- Register Button -->
-    <Button
-        android:id="@+id/openRegisterBtn"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/registerText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:padding="16sp"
-        android:text="Registriraj se"
-        android:textSize="18sp"
-        android:backgroundTint="#81D4FA"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Nemate račun? Registrirajte se"
+        android:textSize="14sp"
+        android:textColor="#717571"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@id/loginBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginBtn" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
 
     <ProgressBar
         android:id="@+id/progressBar"

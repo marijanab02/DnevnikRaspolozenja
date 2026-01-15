@@ -6,6 +6,7 @@ import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +21,9 @@ import com.example.dnevnikraspolozenja.utils.AuthManager;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText usernameInput, emailInput, passwordInput, confirmPasswordInput;
-    private Button registerBtn, backToLoginBtn;
+    private Button registerBtn;
+    private TextView backToLoginText;
+
     private ProgressBar progressBar;
     private AuthManager authManager;
 
@@ -41,12 +44,12 @@ public class RegisterActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.passwordInput);
         confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
         registerBtn = findViewById(R.id.registerBtn);
-        backToLoginBtn = findViewById(R.id.backToLoginBtn);
+        backToLoginText = findViewById(R.id.backToLoginText);
         progressBar = findViewById(R.id.ProgressBar);
 }
     private void setupListeners() {
         registerBtn.setOnClickListener(v -> registerUser());
-        backToLoginBtn.setOnClickListener(v -> finish());
+        backToLoginText.setOnClickListener(v -> finish());
     }
 
     private void registerUser() {
@@ -140,7 +143,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void setLoading(boolean isLoading) {
         progressBar.setVisibility(isLoading ? ProgressBar.VISIBLE : ProgressBar.GONE);
         registerBtn.setEnabled(!isLoading);
-        backToLoginBtn.setEnabled(!isLoading);
+        backToLoginText.setEnabled(!isLoading);
         usernameInput.setEnabled(!isLoading);
         emailInput.setEnabled(!isLoading);
         passwordInput.setEnabled(!isLoading);

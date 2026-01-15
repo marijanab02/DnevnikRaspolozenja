@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +23,8 @@ import com.example.dnevnikraspolozenja.utils.AuthManager;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText emailInput, passwordInput;
-    private Button loginBtn, registerBtn;
+    private Button loginBtn;
+    private TextView registerText;
     private ProgressBar progressBar;
     private AuthManager authManager;
 
@@ -47,14 +49,14 @@ public class LoginActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
         loginBtn = findViewById(R.id.loginBtn);
-        registerBtn = findViewById(R.id.openRegisterBtn);
+        registerText = findViewById(R.id.registerText);
         progressBar = findViewById(R.id.progressBar);
     }
 
     private void setupListeners() {
         loginBtn.setOnClickListener(v -> loginUser());
 
-        registerBtn.setOnClickListener(v ->
+        registerText.setOnClickListener(v ->
                 startActivity(new Intent(this, RegisterActivity.class))
         );
     }

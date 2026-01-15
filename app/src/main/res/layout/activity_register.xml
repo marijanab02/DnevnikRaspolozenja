@@ -215,6 +215,28 @@
         android:translationY="-50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/logoCard"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="60dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/titleText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <ImageView
+            android:id="@+id/appLogo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo2" />
+    </androidx.cardview.widget.CardView>
+
 
 
 
@@ -224,7 +246,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="20dp"
         android:text="Registracija"
         android:textSize="32sp"
         android:textStyle="bold"
@@ -306,19 +328,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
 
-    <Button
-        android:id="@+id/backToLoginBtn"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/backToLoginText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nazad na prijavu"
-        android:textSize="16sp"
-        android:backgroundTint="#81D4FA"
-        android:textColor="#FFFFFF"
+        android:text="Već imate račun? Prijavite se"
+        android:textSize="14sp"
+        android:textColor="#717571"
+        android:textStyle="bold"
         android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintTop_toBottomOf="@+id/registerBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
+
 
     <ProgressBar
         android:id="@+id/ProgressBar"
