@@ -1,9 +1,11 @@
 package com.example.dnevnikraspolozenja.activities;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -16,7 +18,8 @@ import com.example.dnevnikraspolozenja.api.RetrofitClient;
 import com.example.dnevnikraspolozenja.models.request.ProfileUpdateRequest;
 import com.example.dnevnikraspolozenja.models.response.ProfileResponse;
 import com.example.dnevnikraspolozenja.utils.AuthManager;
-import com.example.dnevnikraspolozenja.utils.Constants;
+
+import java.util.Calendar;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -38,10 +41,35 @@ public class EditProfileActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         cancelBtn = findViewById(R.id.cancelBtn);
 
+        // Otvori DatePicker kad klikne na dobInput
+        dobInput.setFocusable(false);
+        dobInput.setClickable(true);
+        dobInput.setOnClickListener(v -> showDatePicker());
+
         loadProfile();
 
         saveProfileBtn.setOnClickListener(v -> updateProfile());
         cancelBtn.setOnClickListener(v -> finish());
+    }
+
+    private void showDatePicker() {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                (DatePicker view, int selectedYear, int selectedMonth, int selectedDay) -> {
+                    String formattedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
+                    dobInput.setText(formattedDate);
+                },
+                year, month, day
+        );
+
+        // Ne dopusti buduće datume
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+        datePickerDialog.show();
     }
 
     private void loadProfile() {
@@ -51,9 +79,6 @@ public class EditProfileActivity extends AppCompatActivity {
         String filter = "eq." + userId;
 
         Log.d("EditProfile", "Loading profile");
-        Log.d("EditProfile", "Token: " + token);
-        Log.d("EditProfile", "UserId: " + userId);
-        Log.d("EditProfile", "Filter: " + filter);
 
         RetrofitClient.getInstance()
                 .getApi()
@@ -65,9 +90,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         if (response != null && response.length > 0) {
                             fullNameInput.setText(response[0].getFull_name());
                             dobInput.setText(response[0].getDate_of_birth());
-                            Log.d("EditProfile", "Profile loaded successfully");
                         } else {
-                            Log.d("EditProfile", "No profile found");
                             Toast.makeText(EditProfileActivity.this,
                                     "Profil ne postoji",
                                     Toast.LENGTH_SHORT).show();
@@ -77,7 +100,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void onError(String errorMessage) {
                         setLoading(false);
-                        Log.e("EditProfile", "Error: " + errorMessage);
                         Toast.makeText(EditProfileActivity.this,
                                 "Greška: " + errorMessage,
                                 Toast.LENGTH_SHORT).show();
@@ -100,8 +122,6 @@ public class EditProfileActivity extends AppCompatActivity {
         String filter = "eq." + userId;
         ProfileUpdateRequest request = new ProfileUpdateRequest(fullName, dob);
 
-        Log.d("EditProfile", "Updating profile");
-
         RetrofitClient.getInstance()
                 .getApi()
                 .updateProfile(token, filter, request)
@@ -109,7 +129,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(ProfileResponse response) {
                         setLoading(false);
-                        Log.d("EditProfile", "Profile updated successfully");
                         Toast.makeText(EditProfileActivity.this,
                                 "Profil uspješno ažuriran!",
                                 Toast.LENGTH_LONG).show();
@@ -119,7 +138,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void onError(String errorMessage) {
                         setLoading(false);
-                        Log.e("EditProfile", "Update error: " + errorMessage);
                         Toast.makeText(EditProfileActivity.this,
                                 "Greška: " + errorMessage,
                                 Toast.LENGTH_SHORT).show();

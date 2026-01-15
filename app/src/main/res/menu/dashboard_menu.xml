@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_add_mood"
+        android:title="  ☁︎   Dodaj raspoloženje"/>
+
+    <item
+        android:id="@+id/menu_mood_history"
+        android:title="𓂃✍︎ Pregled raspoloženja"/>
+
+    <item
+        android:id="@+id/menu_edit_profile"
+        android:title="  ⚙ ︎  Uredi profil"/>
+
+    <item
+        android:id="@+id/menu_logout"
+        android:title=" ➜]   Odjavi se"/>
+
+</menu>

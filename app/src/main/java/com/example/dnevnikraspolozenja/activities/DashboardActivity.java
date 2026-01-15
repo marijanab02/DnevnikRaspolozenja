@@ -6,6 +6,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuItem;
+import androidx.appcompat.widget.Toolbar;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -15,6 +19,7 @@ import com.example.dnevnikraspolozenja.api.ApiCallback;
 import com.example.dnevnikraspolozenja.api.RetrofitClient;
 import com.example.dnevnikraspolozenja.models.request.UpdateUserTaskRequest;
 import com.example.dnevnikraspolozenja.models.request.UserTaskRequest;
+import com.example.dnevnikraspolozenja.models.response.ProfileResponse;
 import com.example.dnevnikraspolozenja.models.response.UserTaskStatusResponse;
 import com.example.dnevnikraspolozenja.utils.AuthManager;
 
@@ -36,13 +41,53 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+// Sakrij default title (naziv aplikacije)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
         initViews();
-        setupNavigation();
 
         // Uvijek dohvat zadnjeg taska iz baze
         fetchLastTask();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.dashboard_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_add_mood) {
+            startActivity(new android.content.Intent(this, CreateMoodActivity.class));
+            return true;
+        }
+
+        if (id == R.id.menu_mood_history) {
+            startActivity(new android.content.Intent(this, MoodListActivity.class));
+            return true;
+        }
+
+        if (id == R.id.menu_edit_profile) {
+            startActivity(new android.content.Intent(this, EditProfileActivity.class));
+            return true;
+        }
+        if (id == R.id.menu_logout) {
+            authManager.logout();
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     private void initViews() {
         authManager = new AuthManager(this);
@@ -51,29 +96,54 @@ public class DashboardActivity extends AppCompatActivity {
 
         welcomeText = findViewById(R.id.welcomeText);
         logoutBtn = findViewById(R.id.logoutBtn);
-        editProfileBtn = findViewById(R.id.editProfileBtn);
-        addMoodBtn = findViewById(R.id.addMoodBtn);
-        viewMoodHistoryBtn = findViewById(R.id.viewMoodHistoryBtn);
         dashboardRoot = findViewById(R.id.dashboardRoot);
         tvTaskTitle = findViewById(R.id.tvTaskTitle);
         tvTaskDescription = findViewById(R.id.tvTaskDescription);
         cbCompleted = findViewById(R.id.cbCompleted);
 
-        // Pozdrav korisniku
+        fetchUserProfile();
+
+    }
+    private void fetchUserProfile() {
+        RetrofitClient.getInstance()
+                .getApi()
+                .getProfile(
+                        "Bearer " + token,
+                        "eq." + userId
+                )
+                .enqueue(new ApiCallback<ProfileResponse[]>() {
+                    @Override
+                    public void onSuccess(ProfileResponse[] response) {
+                        if (response != null && response.length > 0) {
+                            String fullName = response[0].getFull_name();
+
+                            if (fullName != null && !fullName.isEmpty()) {
+                                welcomeText.setText("Dobrodošli, " + fullName);
+                            } else {
+                                setFallbackUsername();
+                            }
+                        } else {
+                            setFallbackUsername();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        setFallbackUsername();
+                    }
+                });
+    }
+    private void setFallbackUsername() {
         String email = authManager.getEmail();
-        String username = email != null && email.contains("@") ? email.split("@")[0] : "";
+        String username = email != null && email.contains("@")
+                ? email.split("@")[0]
+                : "";
+
         welcomeText.setText("Dobrodošli, " + username);
     }
 
-    private void setupNavigation() {
-        addMoodBtn.setOnClickListener(v -> startActivity(new android.content.Intent(this, com.example.dnevnikraspolozenja.activities.CreateMoodActivity.class)));
-        editProfileBtn.setOnClickListener(v -> startActivity(new android.content.Intent(this, com.example.dnevnikraspolozenja.activities.EditProfileActivity.class)));
-        viewMoodHistoryBtn.setOnClickListener(v -> startActivity(new android.content.Intent(this, com.example.dnevnikraspolozenja.activities.MoodListActivity.class)));
-        logoutBtn.setOnClickListener(v -> {
-            authManager.logout();
-            finish();
-        });
-    }
+
+
 
     private void fetchLastTask() {
         RetrofitClient.getInstance()
@@ -99,18 +169,29 @@ public class DashboardActivity extends AppCompatActivity {
                         tvTaskTitle.setText(lastTask.getTask().getTitle());
                         tvTaskDescription.setText(lastTask.getTask().getDescription());
                         cbCompleted.setChecked(lastTask.isCompleted());
+                        cbCompleted.setEnabled(!lastTask.isCompleted());
                         currentStatusId = lastTask.getId();
                         cbCompleted.setVisibility(View.VISIBLE);
 
-                        // Checkbox click listener
-                        cbCompleted.setOnClickListener(v -> {
-                            cbCompleted.setEnabled(false); // sprječava višestruki click
-                            markTaskCompleted();
-                        });
+                        if (!lastTask.isCompleted()) {
+                            cbCompleted.setOnClickListener(v -> {
+                                cbCompleted.setEnabled(false);
+                                cbCompleted.setChecked(true);
+                                markTaskCompleted();
+                            });
+                        } else {
+                            cbCompleted.setOnClickListener(null);
+                        }
+                        cbCompleted.setText(
+                                lastTask.isCompleted() ? "Bravo, završili ste zadatak!" : "Završite zadatak!"
+                        );
+
+
                     }
 
                     @Override
                     public void onError(String errorMessage) {
+                        cbCompleted.setText("Završite zadatak!");
                         Toast.makeText(DashboardActivity.this, "Greška: " + errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
@@ -134,7 +215,10 @@ public class DashboardActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void response) {
                         Toast.makeText(DashboardActivity.this, "Task označen kao urađen!", Toast.LENGTH_SHORT).show();
-                        cbCompleted.setEnabled(true);
+                        cbCompleted.setChecked(true);
+                        cbCompleted.setEnabled(false);
+                        cbCompleted.setText("Bravo, završili ste zadatak!");
+
                     }
 
                     @Override
@@ -145,4 +229,5 @@ public class DashboardActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }
