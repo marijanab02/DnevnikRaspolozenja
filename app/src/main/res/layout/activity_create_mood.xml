@@ -2,9 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="24dp"
+
     android:background="#F5F5F5">
+    <include
+        layout="@layout/custom_toolbar"
+        android:id="@+id/includeToolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Header -->
     <TextView
@@ -14,16 +21,18 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#333333"
-        android:layout_marginBottom="32dp"/>
+        android:layout_marginBottom="32dp"
+        android:padding="24dp"/>
 
     <!-- Mood Score Section -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="16dp"
         android:text="Tvoje raspoloženje (1-5)"
-        android:textSize="16sp"
         android:textColor="#666666"
-        android:layout_marginBottom="16dp"/>
+        android:textSize="16sp" />
 
     <!-- Mood Score Buttons -->
     <LinearLayout
@@ -31,7 +40,9 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="8dp"
+        >
 
         <Button
             android:id="@+id/btnMood1"
@@ -89,31 +100,35 @@
         android:id="@+id/tvSelectedMood"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="24dp"
         android:text="Odabrano: Nije odabrano"
-        android:textSize="14sp"
         android:textColor="#999999"
-        android:layout_marginBottom="24dp"/>
+        android:textSize="14sp" />
 
     <!-- Note Section -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="8dp"
         android:text="Bilješka (opciono)"
-        android:textSize="16sp"
         android:textColor="#666666"
-        android:layout_marginBottom="8dp"/>
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/etNote"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:hint="Napiši kako se osjećaš..."
-        android:gravity="top|start"
-        android:padding="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:background="@android:color/white"
-        android:textSize="14sp"
+        android:gravity="top|start"
+        android:hint="Napiši kako se osjećaš..."
         android:inputType="textMultiLine"
-        android:maxLines="5"/>
+        android:maxLines="5"
+        android:padding="12dp"
+        android:textSize="14sp" />
 
     <Space
         android:layout_width="match_parent"
@@ -125,10 +140,13 @@
         android:id="@+id/btnSaveMood"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="#4CAF50"
         android:text="Spremi Mood"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:backgroundTint="#4CAF50"/>
+        android:textStyle="bold" />
 
     <!-- Progress Bar -->
     <ProgressBar
