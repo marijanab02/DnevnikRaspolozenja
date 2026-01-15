@@ -2,6 +2,8 @@ package com.example.dnevnikraspolozenja.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,6 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.dnevnikraspolozenja.R;
 import com.example.dnevnikraspolozenja.api.ApiCallback;
 import com.example.dnevnikraspolozenja.api.RetrofitClient;
@@ -35,6 +39,14 @@ public class CreateMoodActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_mood);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+// Sakrij default title (naziv aplikacije)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
         initViews();
         loadUserData();
@@ -223,5 +235,35 @@ public class CreateMoodActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.dashboard_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
+        if (id == R.id.menu_add_mood) {
+            startActivity(new android.content.Intent(this, CreateMoodActivity.class));
+            return true;
+        }
+
+        if (id == R.id.menu_mood_history) {
+            startActivity(new android.content.Intent(this, MoodListActivity.class));
+            return true;
+        }
+
+        if (id == R.id.menu_edit_profile) {
+            startActivity(new android.content.Intent(this, EditProfileActivity.class));
+            return true;
+        }
+        if (id == R.id.menu_logout) {
+            authManager.logout();
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -5,8 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#B3E5FC"
-
-    android:padding="30dp">
+    >
+    <include
+        layout="@layout/custom_toolbar"
+        android:id="@+id/includeToolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <ImageView
         android:id="@+id/cloud"
@@ -83,8 +88,8 @@
         android:id="@+id/cloud3"
         android:layout_width="300dp"
         android:layout_height="150dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="428dp"
+        android:layout_marginEnd="248dp"
+        android:layout_marginBottom="412dp"
         android:alpha="0.3"
         android:rotation="15"
         android:scaleType="fitXY"
@@ -98,8 +103,8 @@
         android:id="@+id/cloud7"
         android:layout_width="300dp"
         android:layout_height="150dp"
-        android:layout_marginEnd="68dp"
-        android:layout_marginBottom="416dp"
+        android:layout_marginEnd="180dp"
+        android:layout_marginBottom="348dp"
         android:alpha="0.3"
         android:rotation="15"
         android:scaleType="fitXY"
@@ -113,8 +118,8 @@
         android:id="@+id/cloud14"
         android:layout_width="300dp"
         android:layout_height="150dp"
-        android:layout_marginEnd="184dp"
-        android:layout_marginBottom="532dp"
+        android:layout_marginEnd="248dp"
+        android:layout_marginBottom="368dp"
         android:alpha="0.3"
         android:rotation="15"
         android:scaleType="fitXY"
@@ -128,8 +133,8 @@
         android:id="@+id/cloud6"
         android:layout_width="196dp"
         android:layout_height="82dp"
-        android:layout_marginEnd="184dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="168dp"
+        android:layout_marginBottom="204dp"
         android:alpha="0.3"
         android:rotation="15"
         android:scaleType="fitXY"
@@ -158,8 +163,8 @@
         android:id="@+id/cloud4"
         android:layout_width="118dp"
         android:layout_height="82dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="192dp"
         android:alpha="0.45"
         android:rotation="-5"
         android:scaleType="fitXY"
@@ -173,8 +178,8 @@
         android:id="@+id/cloud8"
         android:layout_width="118dp"
         android:layout_height="82dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="200dp"
         android:alpha="0.45"
         android:rotation="-5"
         android:scaleType="fitXY"
@@ -184,12 +189,13 @@
         app:layout_constraintStart_toEndOf="@+id/cloud1"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <ImageView
         android:id="@+id/cloud5"
         android:layout_width="116dp"
         android:layout_height="79dp"
-        android:layout_marginStart="180dp"
-        android:layout_marginBottom="88dp"
+        android:layout_marginStart="240dp"
+        android:layout_marginBottom="32dp"
         android:alpha="0.35"
         android:rotation="10"
         android:scaleType="fitXY"
@@ -203,7 +209,7 @@
         android:id="@+id/cloud12"
         android:layout_width="137dp"
         android:layout_height="95dp"
-        android:layout_marginStart="160dp"
+        android:layout_marginStart="228dp"
         android:layout_marginBottom="8dp"
         android:alpha="0.35"
         android:rotation="10"
@@ -214,15 +220,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="160dp"
         android:text="Uredi profil"
         android:textColor="#0288D1"
         android:textSize="28sp"
+        android:padding="30dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -232,52 +238,60 @@
         android:id="@+id/fullNameInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/input_background"
         android:hint="Ime i prezime"
         android:padding="16dp"
-        android:background="@drawable/input_background"
-        app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="45dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
     <EditText
         android:id="@+id/dobInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/input_background"
+        android:clickable="true"
+        android:focusable="false"
         android:hint="Datum rođenja (YYYY-MM-DD)"
         android:padding="16dp"
-        android:focusable="false"
-        android:clickable="true"
-        android:background="@drawable/input_background"
-        app:layout_constraintTop_toBottomOf="@+id/fullNameInput"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fullNameInput" />
 
     <Button
         android:id="@+id/saveProfileBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="30dp"
+        android:backgroundTint="#0288D1"
         android:text="Spremi promjene"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#0288D1"
-        app:layout_constraintTop_toBottomOf="@+id/dobInput"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dobInput" />
 
     <!-- Novi gumb Odustani -->
     <Button
         android:id="@+id/cancelBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="30dp"
+        android:backgroundTint="#81D4FA"
         android:text="Odustani"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#81D4FA"
-        app:layout_constraintTop_toBottomOf="@+id/saveProfileBtn"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/saveProfileBtn" />
 
     <ProgressBar
         android:id="@+id/progressBar"
