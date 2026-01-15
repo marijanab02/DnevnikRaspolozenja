@@ -246,6 +246,8 @@
         android:layout_height="wrap_content"
         android:hint="Datum rođenja (YYYY-MM-DD)"
         android:padding="16dp"
+        android:focusable="false"
+        android:clickable="true"
         android:background="@drawable/input_background"
         app:layout_constraintTop_toBottomOf="@+id/fullNameInput"
         app:layout_constraintStart_toStartOf="parent"
