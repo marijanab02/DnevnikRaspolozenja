@@ -95,7 +95,6 @@ public class DashboardActivity extends AppCompatActivity {
         token = authManager.getToken();
 
         welcomeText = findViewById(R.id.welcomeText);
-        logoutBtn = findViewById(R.id.logoutBtn);
         dashboardRoot = findViewById(R.id.dashboardRoot);
         tvTaskTitle = findViewById(R.id.tvTaskTitle);
         tvTaskDescription = findViewById(R.id.tvTaskDescription);
