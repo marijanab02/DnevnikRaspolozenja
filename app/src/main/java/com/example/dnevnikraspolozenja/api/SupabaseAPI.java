@@ -5,6 +5,8 @@ import com.example.dnevnikraspolozenja.models.request.CreateMentalTaskRequest;
 import com.example.dnevnikraspolozenja.models.request.RegisterRequest;
 
 import com.example.dnevnikraspolozenja.models.request.LoginRequest;
+import com.example.dnevnikraspolozenja.models.request.UpdateUserTaskRequest;
+import com.example.dnevnikraspolozenja.models.request.UserTaskRequest;
 import com.example.dnevnikraspolozenja.models.response.AuthResponse;
 
 import com.example.dnevnikraspolozenja.models.request.ProfileUpdateRequest;
@@ -15,6 +17,7 @@ import com.example.dnevnikraspolozenja.models.response.ProfileResponse;
 import com.example.dnevnikraspolozenja.models.response.MoodEntryResponse;
 import com.example.dnevnikraspolozenja.models.request.CreateMoodRequest;
 import com.example.dnevnikraspolozenja.models.request.UpdateMoodRequest;
+import com.example.dnevnikraspolozenja.models.response.UserTaskStatusResponse;
 
 
 import java.util.List;
@@ -26,7 +29,6 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.DELETE;
 
@@ -115,4 +117,37 @@ public interface SupabaseAPI {
     Call<List<MentalTask>> getMentalTasks(
             @Header("Authorization") String token
     );
+    @GET("rest/v1/mental_tasks")
+    Call<List<MentalTask>> getTasksForMood(
+            @Header("Authorization") String token,
+            @Query("mood_levels") String moodLevelArray,
+            @Query("order") String order,   // npr. "id.asc"
+            @Query("limit") Integer limit   // npr. 100
+    );
+    @POST("rest/v1/user_task_status")
+    Call<Void> insertUserTask(
+            @Header("Authorization") String token,
+            @Body UserTaskRequest request
+    );
+    // Dohvati zadnji task za korisnika
+    @GET("rest/v1/user_task_status")
+    Call<UserTaskStatusResponse[]> getLastUserTask(
+            @Header("Authorization") String token,
+            @Query("user_id") String userIdFilter,
+            @Query("select") String select,
+            @Query("order") String order, // npr. "id.desc"
+            @Query("limit") int limit      // npr. 1
+    );
+
+    // Update user task status
+    @PATCH("rest/v1/user_task_status")
+    Call<Void> updateUserTask(
+            @Header("Authorization") String token,
+            @Query("id") String idFilter,
+            @Body UpdateUserTaskRequest request
+    );
+
+
+
+
 }

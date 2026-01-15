@@ -1,7 +1,6 @@
 package com.example.dnevnikraspolozenja.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,9 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.dnevnikraspolozenja.R;
 import com.example.dnevnikraspolozenja.api.ApiCallback;
 import com.example.dnevnikraspolozenja.api.RetrofitClient;
+import com.example.dnevnikraspolozenja.models.MentalTask;
 import com.example.dnevnikraspolozenja.models.request.CreateMoodRequest;
-import com.example.dnevnikraspolozenja.models.response.MoodEntryResponse;
+import com.example.dnevnikraspolozenja.models.request.UserTaskRequest;
 import com.example.dnevnikraspolozenja.utils.AuthManager;
+import java.util.List;
+import java.util.Random;
 
 public class CreateMoodActivity extends AppCompatActivity {
 
@@ -119,10 +121,7 @@ public class CreateMoodActivity extends AppCompatActivity {
 
     private void saveMoodEntry() {
         String note = etNote.getText().toString().trim();
-
-        if (note.isEmpty()) {
-            note = null;
-        }
+        if (note.isEmpty()) note = null;
 
         CreateMoodRequest request = new CreateMoodRequest(userId, selectedMoodScore, note);
 
@@ -135,21 +134,8 @@ public class CreateMoodActivity extends AppCompatActivity {
                 .enqueue(new ApiCallback<Void>() {
                     @Override
                     public void onSuccess(Void response) {
-                        progressBar.setVisibility(View.GONE);
-                        btnSaveMood.setEnabled(true);
-
-                        Toast.makeText(CreateMoodActivity.this,
-                                "Mood uspješno spremljen!", Toast.LENGTH_SHORT).show();
-
-                        getSharedPreferences("MoodPrefs", MODE_PRIVATE)
-                                .edit()
-                                .putInt("last_mood_score", selectedMoodScore)
-                                .apply();
-
-                        Intent intent = new Intent(CreateMoodActivity.this, DashboardActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                        finish();
+                        // Nakon što je mood spremljen, dohvat random taska
+                        fetchRandomTaskAndInsert();
                     }
 
                     @Override
@@ -161,4 +147,81 @@ public class CreateMoodActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void insertUserTask(long taskId, MentalTask randomTask) {
+        UserTaskRequest request = new UserTaskRequest(userId, taskId);
+        request.setCompleted(false); // boolean postavljen preko settera
+
+        RetrofitClient.getInstance()
+                .getApi()
+                .insertUserTask("Bearer " + token, request)
+                .enqueue(new ApiCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void response) {
+                        goToDashboard(randomTask); // šaljemo task direktno
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        Toast.makeText(CreateMoodActivity.this,
+                                "Greška pri dodjeljivanju taska: " + errorMessage, Toast.LENGTH_LONG).show();
+                        goToDashboard(randomTask);
+                    }
+                });
+    }
+
+    private void fetchRandomTaskAndInsert() {
+        String moodFilter = "cs.{" + selectedMoodScore + "}";
+
+        RetrofitClient.getInstance()
+                .getApi()
+                .getTasksForMood("Bearer " + token, moodFilter, "id.asc", 100)
+                .enqueue(new ApiCallback<List<MentalTask>>() {
+                    @Override
+                    public void onSuccess(List<MentalTask> tasks) {
+                        Toast.makeText(CreateMoodActivity.this,
+                                "Pronađeno " + tasks.size() + " taskova za raspoloženje " + selectedMoodScore,
+                                Toast.LENGTH_SHORT).show();
+
+                        if (tasks.isEmpty()) {
+                            goToDashboard(null);
+                            return;
+                        }
+
+                        // random odabir
+                        MentalTask randomTask = tasks.get(new Random().nextInt(tasks.size()));
+                        insertUserTask(randomTask.getId(), randomTask);
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        Toast.makeText(CreateMoodActivity.this,
+                                "Greška pri dohvaćanju taskova: " + errorMessage,
+                                Toast.LENGTH_LONG).show();
+                        goToDashboard(null);
+                    }
+                });
+    }
+
+
+    private void goToDashboard(MentalTask task) {
+        progressBar.setVisibility(View.GONE);
+        btnSaveMood.setEnabled(true);
+
+        Toast.makeText(CreateMoodActivity.this,
+                "Mood i task uspješno spremljeni!", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(CreateMoodActivity.this, DashboardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        // šaljemo task u Dashboard ako postoji
+        if (task != null) {
+            intent.putExtra("task_title", task.getTitle());
+            intent.putExtra("task_description", task.getDescription());
+        }
+
+        startActivity(intent);
+        finish();
+    }
+
 }
