@@ -54,6 +54,12 @@ public class DashboardActivity extends AppCompatActivity {
         // Uvijek dohvat zadnjeg taska iz baze
         fetchLastTask();
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Osvježi task svaki put kad se Dashboard pojavi
+        fetchLastTask();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
