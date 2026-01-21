@@ -1,5 +1,6 @@
 package com.example.dnevnikraspolozenja.activities;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,10 @@ import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.widget.Toolbar;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,11 +26,18 @@ import com.example.dnevnikraspolozenja.models.request.UpdateUserTaskRequest;
 import com.example.dnevnikraspolozenja.models.request.UserTaskRequest;
 import com.example.dnevnikraspolozenja.models.response.ProfileResponse;
 import com.example.dnevnikraspolozenja.models.response.UserTaskStatusResponse;
+import com.example.dnevnikraspolozenja.notifications.MoodNotificationReceiver;
 import com.example.dnevnikraspolozenja.utils.AuthManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import java.util.Calendar;
+
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -36,6 +48,7 @@ public class DashboardActivity extends AppCompatActivity {
     private ConstraintLayout dashboardRoot;
     private String userId, token;
     private long currentStatusId;
+    private static final int NOTIFICATION_PERMISSION_CODE = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +64,10 @@ public class DashboardActivity extends AppCompatActivity {
 
         initViews();
 
+
         // Uvijek dohvat zadnjeg taska iz baze
         fetchLastTask();
+        checkNotificationPermission();
     }
     @Override
     protected void onResume() {
@@ -234,5 +249,69 @@ public class DashboardActivity extends AppCompatActivity {
                     }
                 });
     }
+    private void checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // API 33+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIFICATION_PERMISSION_CODE);
+            } else {
+                scheduleMoodNotifications();
+            }
+        } else {
+            scheduleMoodNotifications(); // na Android <13 odmah zakazujemo
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == NOTIFICATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                scheduleMoodNotifications(); // korisnik dao dozvolu
+            } else {
+                Toast.makeText(this, "Morate dozvoliti notifikacije da biste primali podsjetnike", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+    private void scheduleMoodNotifications() {
+        scheduleNotification(8);
+        scheduleNotification(14);
+        scheduleNotification(18);
+    }
+
+    private void scheduleNotification(int hour) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        Intent intent = new Intent(this, MoodNotificationReceiver.class);
+        intent.putExtra("hour", hour);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, hour, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent
+            );
+        }
+    }
+
+
+
 
 }
