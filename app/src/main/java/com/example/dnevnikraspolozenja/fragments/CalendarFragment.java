@@ -1,12 +1,17 @@
-package com.example.dnevnikraspolozenja.activities;
+package com.example.dnevnikraspolozenja.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,33 +30,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+public class CalendarFragment extends Fragment {
 
-
-public class MoodCalendarActivity extends AppCompatActivity {
+    private static final String TAG = "CalendarFragment";
 
     private RecyclerView recyclerView;
     private CalendarAdapter adapter;
     private AuthManager authManager;
-
     private YearMonth currentMonth;
-
     private TextView tvMonthTitle;
-    private Button btnPrev, btnNext, btnBack;
+    private Button btnPrev, btnNext;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mood_calendar);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView called");
+        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        recyclerView = findViewById(R.id.recyclerViewCalendar);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 7));
+        recyclerView = view.findViewById(R.id.recyclerViewCalendar);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
 
-        tvMonthTitle = findViewById(R.id.tvMonthTitle);
-        btnPrev = findViewById(R.id.btnPrev);
-        btnNext = findViewById(R.id.btnNext);
-        btnBack = findViewById(R.id.btnBack);
+        tvMonthTitle = view.findViewById(R.id.tvMonthTitle);
+        btnPrev = view.findViewById(R.id.btnPrev);
+        btnNext = view.findViewById(R.id.btnNext);
 
-        authManager = new AuthManager(this);
+        authManager = new AuthManager(requireContext());
         currentMonth = YearMonth.now();
 
         updateMonthTitle();
@@ -67,16 +70,30 @@ public class MoodCalendarActivity extends AppCompatActivity {
             updateMonthTitle();
             loadMoodForMonth();
         });
-        btnBack.setOnClickListener(v -> finish());
 
+        loadMoodForMonth();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume called - refreshing calendar");
         loadMoodForMonth();
     }
 
     private void updateMonthTitle() {
-        String monthName = currentMonth.getMonth().name().toLowerCase();
-        monthName = monthName.substring(0, 1).toUpperCase() + monthName.substring(1);
+        String[] mjeseci = {
+                "Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj",
+                "Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac"
+        };
+
+        int monthIndex = currentMonth.getMonthValue() - 1;
+        String monthName = mjeseci[monthIndex];
 
         tvMonthTitle.setText(monthName + " " + currentMonth.getYear());
+        Log.d(TAG, "Updated month title: " + monthName + " " + currentMonth.getYear());
     }
 
     private void loadMoodForMonth() {
@@ -86,15 +103,15 @@ public class MoodCalendarActivity extends AppCompatActivity {
         String startDate = currentMonth.atDay(1).toString();
         String endDate = currentMonth.plusMonths(1).atDay(1).toString();
 
+        Log.d(TAG, "Loading moods for user: " + userId);
+        Log.d(TAG, "Date range: " + startDate + " to " + endDate);
+
         Map<String, String> filters = new HashMap<>();
         filters.put("user_id", "eq." + userId);
         filters.put("deleted", "eq.false");
         filters.put("select", "id,created_at,mood_score");
         filters.put("created_at", "gte." + startDate);
-        filters.put("and", "(created_at.lt." + endDate + ")"); // AND operator za range
-
-        Log.d("MoodCalendar", "Loading moods for: " + currentMonth);
-        Log.d("MoodCalendar", "Date range: " + startDate + " to " + endDate);
+        filters.put("and", "(created_at.lt." + endDate + ")");
 
         RetrofitClient.getInstance()
                 .getApi()
@@ -102,16 +119,21 @@ public class MoodCalendarActivity extends AppCompatActivity {
                 .enqueue(new ApiCallback<MoodEntryResponse[]>() {
                     @Override
                     public void onSuccess(MoodEntryResponse[] response) {
-                        Log.d("MoodCalendar", "Response received: " + response.length + " entries");
+
+
                         buildCalendar(response);
                     }
 
                     @Override
                     public void onError(String errorMessage) {
-                        Log.e("MoodCalendar", "Error: " + errorMessage);
-                        Toast.makeText(MoodCalendarActivity.this,
-                                "Greška: " + errorMessage,
-                                Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Error loading moods: " + errorMessage);
+                        if (getContext() != null) {
+                            Toast.makeText(getContext(),
+                                    "Greška pri učitavanju kalendara: " + errorMessage,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        // Prikazi prazan kalendar u slučaju greške
+                        buildCalendar(new MoodEntryResponse[0]);
                     }
                 });
     }
@@ -121,14 +143,21 @@ public class MoodCalendarActivity extends AppCompatActivity {
         Map<LocalDate, Integer> moodByDate = new HashMap<>();
 
         for (MoodEntryResponse mood : moods) {
-            LocalDate date = LocalDate.parse(mood.getCreatedAt().substring(0, 10));
-            moodByDate.put(date, mood.getMoodScore());
+            try {
+                LocalDate date = LocalDate.parse(mood.getCreatedAt().substring(0, 10));
+                moodByDate.put(date, mood.getMoodScore());
+
+            } catch (Exception e) {
+                Log.e(TAG, "Error parsing date: " + mood.getCreatedAt(), e);
+            }
         }
 
         List<CalendarDay> days = new ArrayList<>();
 
         LocalDate firstDayOfMonth = currentMonth.atDay(1);
-        int dayOfWeek = firstDayOfMonth.getDayOfWeek().getValue(); // 1=Mon ... 7=Sun
+        int dayOfWeek = firstDayOfMonth.getDayOfWeek().getValue(); // 1=PON, 7=NED
+
+
 
         for (int i = 1; i < dayOfWeek; i++) {
             days.add(new CalendarDay(null, null));
@@ -140,9 +169,29 @@ public class MoodCalendarActivity extends AppCompatActivity {
             LocalDate date = currentMonth.atDay(day);
             Integer moodScore = moodByDate.get(date);
             days.add(new CalendarDay(date, moodScore));
+
+
         }
+
 
         adapter = new CalendarAdapter(days);
         recyclerView.setAdapter(adapter);
+
+    }
+
+    private String emojiForMood(int mood) {
+        switch (mood) {
+            case 1: return "😢";
+            case 2: return "😟";
+            case 3: return "😐";
+            case 4: return "🙂";
+            case 5: return "😄";
+            default: return "";
+        }
+    }
+
+
+    public void refreshCalendar() {
+        loadMoodForMonth();
     }
 }

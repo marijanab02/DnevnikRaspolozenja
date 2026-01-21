@@ -48,4 +48,5 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
+    implementation("androidx.fragment:fragment:1.6.1")
 }
