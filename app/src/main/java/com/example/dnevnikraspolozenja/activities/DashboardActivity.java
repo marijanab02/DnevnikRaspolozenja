@@ -104,6 +104,10 @@ public class DashboardActivity extends AppCompatActivity {
             finish();
             return true;
         }
+        if (id == R.id.menu_mood_calendar) {
+            startActivity(new Intent(this, MoodCalendarActivity.class));
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

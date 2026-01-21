@@ -21,6 +21,7 @@ import com.example.dnevnikraspolozenja.models.response.UserTaskStatusResponse;
 
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -31,6 +32,7 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.DELETE;
+import retrofit2.http.QueryMap;
 
 public interface SupabaseAPI {
     @Headers("Content-Type: application/json")
@@ -147,7 +149,10 @@ public interface SupabaseAPI {
             @Body UpdateUserTaskRequest request
     );
 
-
-
+    @GET("rest/v1/mood_entries")
+    Call<MoodEntryResponse[]> getMoodEntriesForMonth(
+            @Header("Authorization") String token,
+            @QueryMap Map<String, String> filters
+    );
 
 }
