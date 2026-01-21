@@ -12,6 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import android.content.SharedPreferences;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import com.example.dnevnikraspolozenja.R;
 import com.example.dnevnikraspolozenja.api.ApiCallback;
@@ -22,6 +26,7 @@ import com.example.dnevnikraspolozenja.models.request.UserTaskRequest;
 import com.example.dnevnikraspolozenja.utils.AuthManager;
 import java.util.List;
 import java.util.Random;
+
 
 public class CreateMoodActivity extends AppCompatActivity {
 
@@ -146,6 +151,14 @@ public class CreateMoodActivity extends AppCompatActivity {
                 .enqueue(new ApiCallback<Void>() {
                     @Override
                     public void onSuccess(Void response) {
+                        SharedPreferences prefs = getSharedPreferences("mood_prefs", MODE_PRIVATE);
+                        prefs.edit()
+                                .putString(
+                                        "last_mood_date",
+                                        new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                                                .format(new Date())
+                                )
+                                .apply();
                         // Nakon što je mood spremljen, dohvat random taska
                         fetchRandomTaskAndInsert();
                     }
