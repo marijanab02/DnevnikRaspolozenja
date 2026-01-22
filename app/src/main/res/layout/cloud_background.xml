@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/dashboard_background">
+
+        <ImageView
+            android:id="@+id/cloud15"
+            android:layout_width="191dp"
+            android:layout_height="122dp"
+            android:layout_marginStart="288dp"
+            android:layout_marginBottom="344dp"
+            android:alpha="0.35"
+            android:rotation="10"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="30dp"
+            android:translationY="-50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud"
+            android:layout_width="191dp"
+            android:layout_height="122dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginBottom="304dp"
+            android:alpha="0.35"
+            android:rotation="10"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="30dp"
+            android:translationY="-50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud9"
+            android:layout_width="191dp"
+            android:layout_height="122dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginBottom="296dp"
+            android:alpha="0.35"
+            android:rotation="10"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="30dp"
+            android:translationY="-50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud1"
+            android:layout_width="137dp"
+            android:layout_height="77dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="592dp"
+            android:alpha="0.5"
+            android:rotation="5"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud13"
+            android:layout_width="137dp"
+            android:layout_height="77dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="604dp"
+            android:alpha="0.5"
+            android:rotation="5"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud2"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="112dp"
+            android:layout_marginEnd="4dp"
+            android:alpha="0.4"
+            android:rotation="-10"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="-30dp"
+            android:translationY="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud10"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="116dp"
+            android:layout_marginEnd="12dp"
+            android:alpha="0.4"
+            android:rotation="-10"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="-30dp"
+            android:translationY="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud3"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="428dp"
+            android:alpha="0.3"
+            android:rotation="15"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="-50dp"
+            android:translationY="-100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud7"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:layout_marginEnd="68dp"
+            android:layout_marginBottom="416dp"
+            android:alpha="0.3"
+            android:rotation="15"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="-50dp"
+            android:translationY="-100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud14"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="432dp"
+            android:alpha="0.3"
+            android:rotation="15"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="-50dp"
+            android:translationY="-100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud6"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:layout_marginEnd="180dp"
+            android:layout_marginBottom="72dp"
+            android:alpha="0.3"
+            android:rotation="15"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="-50dp"
+            android:translationY="-100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud11"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:layout_marginEnd="152dp"
+            android:layout_marginBottom="52dp"
+            android:alpha="0.3"
+            android:rotation="15"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="-50dp"
+            android:translationY="-100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud4"
+            android:layout_width="118dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="68dp"
+            android:layout_marginTop="4dp"
+            android:alpha="0.45"
+            android:rotation="-5"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="20dp"
+            android:translationY="30dp"
+            app:layout_constraintStart_toEndOf="@+id/cloud1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud8"
+            android:layout_width="118dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="16dp"
+            android:alpha="0.45"
+            android:rotation="-5"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="20dp"
+            android:translationY="30dp"
+            app:layout_constraintStart_toEndOf="@+id/cloud1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud5"
+            android:layout_width="191dp"
+            android:layout_height="122dp"
+            android:layout_marginStart="180dp"
+            android:layout_marginBottom="88dp"
+            android:alpha="0.35"
+            android:rotation="10"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="30dp"
+            android:translationY="-50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/cloud12"
+            android:layout_width="191dp"
+            android:layout_height="122dp"
+            android:layout_marginStart="136dp"
+            android:layout_marginBottom="108dp"
+            android:alpha="0.35"
+            android:rotation="10"
+            android:scaleType="fitXY"
+            android:src="@drawable/cloud"
+            android:translationX="30dp"
+            android:translationY="-50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>

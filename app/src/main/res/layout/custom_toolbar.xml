@@ -46,33 +46,8 @@
         android:gravity="center_vertical"
         android:layout_marginTop="13dp" />
 
-    <ImageView
-        android:id="@+id/cloud"
-        android:layout_width="162dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="192dp"
-        android:layout_marginBottom="16dp"
-        android:alpha="0.35"
-        android:rotation="10"
-        android:src="@drawable/cloud"
-        android:translationX="30dp"
-        android:translationY="-20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/cloud1"
-        android:layout_width="140dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="64dp"
-        android:alpha="0.4"
-        android:rotation="180"
-        android:src="@drawable/cloud"
-        android:translationX="30dp"
-        android:translationY="-20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
