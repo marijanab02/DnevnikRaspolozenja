@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="12dp">
+
+    <!-- KONTROLE: Prev | Month | Next -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/input_background"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/btnPrev"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:text="◀"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:backgroundTint="#0288D1"
+            android:textColor="#FFFFFF"/>
+
+        <TextView
+            android:id="@+id/tvMonthTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Siječanj 2026"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#01579B"
+            android:gravity="center"
+            android:layout_marginHorizontal="12dp" />
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:text="▶"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:backgroundTint="#0288D1"
+            android:textColor="#FFFFFF"/>
+    </LinearLayout>
+
+    <!-- NAZIVI DANA -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp"
+        android:weightSum="7">
+
+        <TextView
+            style="@style/DayHeaderStyle"
+            android:text="PON"/>
+        <TextView
+            style="@style/DayHeaderStyle"
+            android:text="UTO"/>
+        <TextView
+            style="@style/DayHeaderStyle"
+            android:text="SRI"/>
+        <TextView
+            style="@style/DayHeaderStyle"
+            android:text="ČET"/>
+        <TextView
+            style="@style/DayHeaderStyle"
+            android:text="PET"/>
+        <TextView
+            style="@style/DayHeaderStyle"
+            android:text="SUB"
+            android:textColor="#0288D1"/>
+        <TextView
+            style="@style/DayHeaderStyle"
+            android:text="NED"
+            android:textColor="#0288D1"/>
+    </LinearLayout>
+
+    <!-- KALENDAR GRID -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCalendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:nestedScrollingEnabled="false"/>
+
+</LinearLayout>

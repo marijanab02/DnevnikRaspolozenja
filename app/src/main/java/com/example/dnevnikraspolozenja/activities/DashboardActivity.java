@@ -22,10 +22,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.dnevnikraspolozenja.R;
 import com.example.dnevnikraspolozenja.api.ApiCallback;
 import com.example.dnevnikraspolozenja.api.RetrofitClient;
+
+import com.example.dnevnikraspolozenja.fragments.CalendarFragment;
+
 import com.example.dnevnikraspolozenja.models.request.UpdateUserTaskRequest;
 import com.example.dnevnikraspolozenja.models.request.UserTaskRequest;
 import com.example.dnevnikraspolozenja.models.response.ProfileResponse;
 import com.example.dnevnikraspolozenja.models.response.UserTaskStatusResponse;
+
 import com.example.dnevnikraspolozenja.notifications.MoodNotificationReceiver;
 import com.example.dnevnikraspolozenja.utils.AuthManager;
 
@@ -40,7 +44,7 @@ import java.util.Calendar;
 
 
 public class DashboardActivity extends AppCompatActivity {
-
+    private CalendarFragment calendarFragment;
     private AuthManager authManager;
     private TextView welcomeText, tvTaskTitle, tvTaskDescription;
     private Button logoutBtn, editProfileBtn, addMoodBtn, viewMoodHistoryBtn;
@@ -72,8 +76,11 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Osvježi task svaki put kad se Dashboard pojavi
         fetchLastTask();
+
+        if (calendarFragment != null) {
+            calendarFragment.refreshCalendar();
+        }
     }
 
     @Override
@@ -102,6 +109,10 @@ public class DashboardActivity extends AppCompatActivity {
         if (id == R.id.menu_logout) {
             authManager.logout();
             finish();
+            return true;
+        }
+        if (id == R.id.menu_mood_calendar) {
+            startActivity(new Intent(this, MoodCalendarActivity.class));
             return true;
         }
 
@@ -260,7 +271,7 @@ public class DashboardActivity extends AppCompatActivity {
                 scheduleMoodNotifications();
             }
         } else {
-            scheduleMoodNotifications(); // na Android <13 odmah zakazujemo
+            scheduleMoodNotifications();
         }
     }
 
