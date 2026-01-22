@@ -3,10 +3,10 @@ package com.example.dnevnikraspolozenja.models.request;
 public class RegisterRequest {
     private String email;
     private String password;
-    private String username;
-    public RegisterRequest(String email, String password,String username) {
+
+    public RegisterRequest(String email, String password) {
         this.email = email;
         this.password = password;
-        this.username=username;
     }
+
 }

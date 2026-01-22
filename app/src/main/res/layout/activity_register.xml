@@ -215,19 +215,16 @@
         android:translationY="-50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+    <!-- LOGO -->
     <androidx.cardview.widget.CardView
         android:id="@+id/logoCard"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="24dp"
         app:cardCornerRadius="60dp"
         app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/titleText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/appLogo"
@@ -237,82 +234,127 @@
             android:src="@drawable/logo2" />
     </androidx.cardview.widget.CardView>
 
-
-
-
-
+    <!-- NASLOV -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:layout_marginTop="20dp"
         android:text="Registracija"
         android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="#0288D1"
-        app:layout_constraintBottom_toTopOf="@+id/usernameInput"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/logoCard"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <EditText
-        android:id="@+id/usernameInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Korisničko ime"
-        android:padding="16dp"
-        android:background="@drawable/input_background"
-        android:textSize="16sp"
+    <!-- AVATAR VIEWPAGER -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/avatarViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
         app:layout_constraintTop_toBottomOf="@+id/titleText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:paddingStart="100dp"
+        android:paddingEnd="100dp"/>
 
-
+    <!-- EMAIL -->
     <EditText
         android:id="@+id/emailInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_background"
         android:hint="Email adresa"
         android:inputType="textEmailAddress"
         android:padding="16dp"
-        android:background="@drawable/input_background"
+        android:textColor="#0288D1"
+        android:textColorHint="#0288D1"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/usernameInput"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avatarViewPager" />
 
+    <!-- IME I PREZIME -->
+    <EditText
+        android:id="@+id/fullNameInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/input_background"
+        android:hint="Ime i prezime"
+        android:padding="16dp"
+        android:textColor="#0288D1"
+        android:textColorHint="#0288D1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailInput" />
+
+    <!-- DATUM ROĐENJA -->
+    <EditText
+        android:id="@+id/dobInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/input_background"
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="Datum rođenja (YYYY-MM-DD)"
+        android:padding="16dp"
+        android:textColor="#0288D1"
+        android:textColorHint="#0288D1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fullNameInput" />
+
+    <!-- LOZINKA -->
     <EditText
         android:id="@+id/passwordInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/input_background"
         android:hint="Lozinka"
         android:inputType="textPassword"
         android:padding="16dp"
-        android:background="@drawable/input_background"
+        android:textColor="#0288D1"
+        android:textColorHint="#0288D1"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/emailInput"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dobInput" />
+
+    <!-- POTVRDA LOZINKE -->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="#0288D1"
+        android:textColor="#0288D1"
+        android:textColorHint="#0288D1"
+        tools:layout_editor_absoluteX="24dp"
+        tools:layout_editor_absoluteY="24dp" />
 
     <EditText
         android:id="@+id/confirmPasswordInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/input_background"
         android:hint="Potvrdi lozinku"
         android:inputType="textPassword"
         android:padding="16dp"
-        android:background="@drawable/input_background"
+        android:textColor="#0288D1"
+        android:textColorHint="#0288D1"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/passwordInput"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
 
+    <!-- REGISTER BUTTON -->
     <Button
         android:id="@+id/registerBtn"
         android:layout_width="0dp"
@@ -323,11 +365,10 @@
         android:textColor="#FFFFFF"
         android:backgroundTint="#0288D1"
         android:padding="16dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@+id/confirmPasswordInput"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
-
+        app:layout_constraintEnd_toEndOf="parent"/>
     <TextView
         android:id="@+id/backToLoginText"
         android:layout_width="wrap_content"
@@ -350,7 +391,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/backToLoginBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
