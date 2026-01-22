@@ -9,8 +9,22 @@
     android:background="@drawable/dashboard_background">
 
     <include
+    android:id="@+id/cloudBackground"
+    layout="@layout/cloud_background"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+    <include
         layout="@layout/custom_toolbar"
         android:id="@+id/includeToolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
