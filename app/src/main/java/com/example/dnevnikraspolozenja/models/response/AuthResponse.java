@@ -5,6 +5,9 @@ import com.example.dnevnikraspolozenja.models.User;
 import com.google.gson.annotations.SerializedName;
 
 public class AuthResponse extends BaseResponse {
+    private String id;
+    private String email;
+
     @SerializedName("access_token")
     private String accessToken;
 
@@ -14,6 +17,8 @@ public class AuthResponse extends BaseResponse {
     private User user;
 
     // Getteri
+    public String getId() { return id; }
+    public String getEmail() { return email; }
     public String getAccessToken() { return accessToken; }
     public String getRefreshToken() { return refreshToken; }
     public User getUser() { return user; }

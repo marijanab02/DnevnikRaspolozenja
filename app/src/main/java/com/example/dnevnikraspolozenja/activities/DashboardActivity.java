@@ -2,9 +2,11 @@ package com.example.dnevnikraspolozenja.activities;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Menu;
@@ -19,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.bumptech.glide.Glide;
 import com.example.dnevnikraspolozenja.R;
 import com.example.dnevnikraspolozenja.api.ApiCallback;
 import com.example.dnevnikraspolozenja.api.RetrofitClient;
@@ -58,21 +61,47 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        authManager = new AuthManager(this); //
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-// Sakrij default title (naziv aplikacije)
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+
+        String token = "Bearer " + authManager.getToken();
+        String userId = authManager.getUserId();
+
+        loadAvatarFromApi(token, userId);
+
         initViews();
-
-
-        // Uvijek dohvat zadnjeg taska iz baze
         fetchLastTask();
         checkNotificationPermission();
     }
+    private void loadAvatarFromApi(String token, String userId) {
+        RetrofitClient.getInstance()
+                .getApi()
+                .getProfile(token, "eq." + userId)
+                .enqueue(new ApiCallback<ProfileResponse[]>() {
+                    @Override
+                    public void onSuccess(ProfileResponse[] response) {
+                        if (response != null && response.length > 0) {
+                            loadAvatar(response[0].getAvatarUrl());
+                        }
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        // optional fallback
+                    }
+                });
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -321,7 +350,16 @@ public class DashboardActivity extends AppCompatActivity {
             );
         }
     }
-
+    private void loadAvatar(String avatarUrl) {
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+        Log.d("AVATAR_URL", "URL: " + avatarUrl);
+        Glide.with(this)
+                .load(avatarUrl)
+                .placeholder(R.drawable.avatar_border)
+                .error(R.drawable.avatar_border)
+                .circleCrop()
+                .into(imgAvatar);
+    }
 
 
 

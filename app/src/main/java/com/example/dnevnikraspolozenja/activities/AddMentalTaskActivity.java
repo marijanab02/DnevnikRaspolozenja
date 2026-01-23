@@ -1,19 +1,28 @@
 package com.example.dnevnikraspolozenja.activities;
 
-import android.os.Bundle;
+import android.content.Intent;
+import
+        android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.example.dnevnikraspolozenja.R;
 import com.example.dnevnikraspolozenja.api.ApiCallback;
 import com.example.dnevnikraspolozenja.api.RetrofitClient;
 import com.example.dnevnikraspolozenja.models.request.CreateMentalTaskRequest;
+import com.example.dnevnikraspolozenja.models.response.ProfileResponse;
 import com.example.dnevnikraspolozenja.utils.AuthManager;
 
 import java.util.ArrayList;
@@ -35,6 +44,20 @@ public class AddMentalTaskActivity extends AppCompatActivity {
 
         authManager = new AuthManager(this);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+// Sakrij default title (naziv aplikacije)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+
+        String token = "Bearer " + authManager.getToken();
+        String userId = authManager.getUserId();
+
+        loadAvatarFromApi(token, userId);
+
         initViews();
         setupSaveButton();
     }
@@ -49,6 +72,8 @@ public class AddMentalTaskActivity extends AppCompatActivity {
         cbMood3 = findViewById(R.id.cbMood3);
         cbMood4 = findViewById(R.id.cbMood4);
         cbMood5 = findViewById(R.id.cbMood5);
+
+        authManager = new AuthManager(this);
 
 
     }
@@ -119,5 +144,63 @@ public class AddMentalTaskActivity extends AppCompatActivity {
     private void setLoading(boolean loading) {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         btnSaveTask.setEnabled(!loading);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.dashboard_menu_admin, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_add_task) {
+            startActivity(new Intent(this, AddMentalTaskActivity.class));
+            return true;
+        }
+
+        if (id == R.id.menu_list_tasks) {
+            startActivity(new Intent(this, MentalTaskListActivity.class));
+            return true;
+        }
+
+        if (id == R.id.menu_admin_logout) {
+            authManager.logout();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    private void loadAvatar(String avatarUrl) {
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+        Log.d("AVATAR_URL", "URL: " + avatarUrl);
+        Glide.with(this)
+                .load(avatarUrl)
+                .placeholder(R.drawable.avatar_border)
+                .error(R.drawable.avatar_border)
+                .circleCrop()
+                .into(imgAvatar);
+    }
+    private void loadAvatarFromApi(String token, String userId) {
+        RetrofitClient.getInstance()
+                .getApi()
+                .getProfile(token, "eq." + userId)
+                .enqueue(new ApiCallback<ProfileResponse[]>() {
+                    @Override
+                    public void onSuccess(ProfileResponse[] response) {
+                        if (response != null && response.length > 0) {
+                            loadAvatar(response[0].getAvatarUrl());
+                        }
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        // optional fallback
+                    }
+                });
     }
 }

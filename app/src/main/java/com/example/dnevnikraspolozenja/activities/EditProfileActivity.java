@@ -1,6 +1,7 @@
 package com.example.dnevnikraspolozenja.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -125,12 +126,12 @@ public class EditProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "Popunite sva polja", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        String selectedAvatarUrl="blaaa";
         setLoading(true);
         String token = "Bearer " + authManager.getToken();
         String userId = authManager.getUserId();
         String filter = "eq." + userId;
-        ProfileUpdateRequest request = new ProfileUpdateRequest(fullName, dob);
+        ProfileUpdateRequest request = new ProfileUpdateRequest(userId, fullName, dob, selectedAvatarUrl);
 
         RetrofitClient.getInstance()
                 .getApi()
@@ -186,6 +187,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         if (id == R.id.menu_logout) {
             authManager.logout();
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
             return true;
         }

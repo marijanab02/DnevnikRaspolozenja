@@ -273,6 +273,7 @@ public class CreateMoodActivity extends AppCompatActivity {
         }
         if (id == R.id.menu_logout) {
             authManager.logout();
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
             return true;
         }

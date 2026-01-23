@@ -4,6 +4,11 @@ public class ProfileResponse {
     private String id;
     private String full_name;
     private String date_of_birth;
+    private String avatar_url;
+
+    public String getAvatarUrl() {
+        return avatar_url;
+    }
 
     private String role;
 

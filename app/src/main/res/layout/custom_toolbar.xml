@@ -46,8 +46,17 @@
         android:gravity="center_vertical"
         android:layout_marginTop="13dp" />
 
-
-
-
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgAvatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/avatar_border"
+        app:shapeAppearanceOverlay="@style/RoundedImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="13dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

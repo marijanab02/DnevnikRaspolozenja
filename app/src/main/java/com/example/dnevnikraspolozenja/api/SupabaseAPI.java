@@ -44,8 +44,10 @@ public interface SupabaseAPI {
     @POST("auth/v1/signup")
     Call<AuthResponse> signup(@Body RegisterRequest request);
 
-
-
+    @POST("rest/v1/profile")
+    Call<Void> insertProfile(
+            @Body ProfileUpdateRequest request
+    );
 
     @GET("rest/v1/profile")
     Call<ProfileResponse[]> getProfile(
@@ -56,7 +58,7 @@ public interface SupabaseAPI {
     @PATCH("rest/v1/profile")
     Call<ProfileResponse> updateProfile(
             @Header("Authorization") String token,
-           // @Header("apikey") String apiKey,
+            // @Header("apikey") String apiKey,
             @Query("id") String idFilter,  // eq. ide u EditProfileActivity
             @Body ProfileUpdateRequest request
     );
