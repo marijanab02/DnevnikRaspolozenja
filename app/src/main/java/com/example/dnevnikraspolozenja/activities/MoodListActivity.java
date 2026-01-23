@@ -1,9 +1,13 @@
 package com.example.dnevnikraspolozenja.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +35,13 @@ public class MoodListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         authManager = new AuthManager(this);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+// Sakrij default title (naziv aplikacije)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
         loadMoodEntries();
     }
 
@@ -62,5 +72,37 @@ public class MoodListActivity extends AppCompatActivity {
                         Toast.makeText(MoodListActivity.this, "Greška: " + errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.dashboard_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_add_mood) {
+            startActivity(new android.content.Intent(this, CreateMoodActivity.class));
+            return true;
+        }
+
+        if (id == R.id.menu_mood_history) {
+            startActivity(new android.content.Intent(this, MoodListActivity.class));
+            return true;
+        }
+
+        if (id == R.id.menu_edit_profile) {
+            startActivity(new android.content.Intent(this, EditProfileActivity.class));
+            return true;
+        }
+        if (id == R.id.menu_logout) {
+            authManager.logout();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

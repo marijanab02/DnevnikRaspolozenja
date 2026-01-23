@@ -1,6 +1,7 @@
 package com.example.dnevnikraspolozenja.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -186,6 +187,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         if (id == R.id.menu_logout) {
             authManager.logout();
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
             return true;
         }
