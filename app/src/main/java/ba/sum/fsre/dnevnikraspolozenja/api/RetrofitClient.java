@@ -1,0 +1,55 @@
+package ba.sum.fsre.dnevnikraspolozenja.api;
+
+import ba.sum.fsre.dnevnikraspolozenja.utils.Constants;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class RetrofitClient {
+
+    private static RetrofitClient instance;
+    private SupabaseAPI api;
+
+    private RetrofitClient() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    okhttp3.Request original = chain.request();
+                    okhttp3.Request.Builder builder = original.newBuilder()
+                            .addHeader("apikey", Constants.ANON_KEY)
+                            .addHeader("Content-Type", "application/json");
+
+
+                    if (original.header("Authorization") == null) {
+                        builder.addHeader("Authorization", "Bearer " + Constants.ANON_KEY);
+                    }
+
+
+                    return chain.proceed(builder.build());
+                })
+                .addInterceptor(logging)
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        api = retrofit.create(SupabaseAPI.class);
+    }
+
+    public static RetrofitClient getInstance() {
+        if (instance == null) {
+            instance = new RetrofitClient();
+        }
+        return instance;
+    }
+
+    public SupabaseAPI getApi() {
+        return api;
+    }
+}

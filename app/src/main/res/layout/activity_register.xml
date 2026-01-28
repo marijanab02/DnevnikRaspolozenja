@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="24dp"
     android:background="#B3E5FC"
-    tools:context=".activities.RegisterActivity">
+    tools:context="ba.sum.dnevnikraspolozenja.activities.RegisterActivity">
 
 
     <ImageView

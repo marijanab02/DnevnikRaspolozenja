@@ -15,34 +15,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DnevnikRaspolozenja">
         <activity
-            android:name=".activities.MoodCalendarActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.MoodCalendarActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MoodListActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.MoodListActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.CreateMoodActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.CreateMoodActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.EditProfileActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.RegisterActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.DashboardActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.DashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.AddMentalTaskActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.AddMentalTaskActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.AdminDashboardActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.AdminDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MentalTaskListActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.MentalTaskListActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="ba.sum.dnevnikraspolozenja.activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,7 +52,7 @@
         </activity>
 
         <receiver
-            android:name=".notifications.MoodNotificationReceiver"
+            android:name="ba.sum.dnevnikraspolozenja.notifications.MoodNotificationReceiver"
             android:enabled="true"
             android:exported="false" />
     </application>

@@ -154,7 +154,7 @@
 
                     <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/calendarFragmentContainer"
-                        android:name="com.example.dnevnikraspolozenja.fragments.CalendarFragment"
+                        android:name="ba.sum.dnevnikraspolozenja.fragments.CalendarFragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 

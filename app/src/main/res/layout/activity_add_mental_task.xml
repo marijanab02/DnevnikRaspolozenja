@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#B3E5FC"
-    tools:context=".activities.AddMentalTaskActivity">
+    tools:context="ba.sum.dnevnikraspolozenja.activities.AddMentalTaskActivity">
     <include
         android:id="@+id/cloudBackground"
         layout="@layout/cloud_background"
