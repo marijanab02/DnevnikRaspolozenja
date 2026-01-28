@@ -3,6 +3,7 @@
         <!-- Boja za overflow meni -->
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
         <item name="popupMenuStyle">@style/BlueOverflowMenu</item>
+        <item name="android:statusBarColor">@color/status_bar_color</item>
     </style>
 
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">

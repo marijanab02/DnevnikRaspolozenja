@@ -1,34 +1,36 @@
 package ba.sum.fsre.dnevnikraspolozenja.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.dnevnikraspolozenja.R;
-
+import android.content.SharedPreferences;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
+import com.bumptech.glide.Glide;
+import ba.sum.fsre.dnevnikraspolozenja.R;
 import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
 import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
 import ba.sum.fsre.dnevnikraspolozenja.models.MentalTask;
 import ba.sum.fsre.dnevnikraspolozenja.models.request.CreateMoodRequest;
 import ba.sum.fsre.dnevnikraspolozenja.models.request.UserTaskRequest;
 import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
+import java.util.List;
+import java.util.Random;
 
 
 public class CreateMoodActivity extends AppCompatActivity {
@@ -39,6 +41,7 @@ public class CreateMoodActivity extends AppCompatActivity {
     private Button btnSaveMood;
     private ProgressBar progressBar;
     private int selectedMoodScore = 0;
+    private ConstraintLayout createMoodRoot;
     private String userId;
     private String token;
     private AuthManager authManager;
@@ -55,9 +58,22 @@ public class CreateMoodActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-
         initViews();
         loadUserData();
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+
+        String avatarUrl = authManager.getAvatarUrl();
+        if (avatarUrl != null) {
+            Glide.with(this)
+                    .load(avatarUrl)
+                    .placeholder(R.drawable.avatar_border)
+                    .error(R.drawable.avatar_border)
+                    .circleCrop()
+                    .into(imgAvatar);
+        }
+
+        applyMoodBackground();
+
         setupMoodButtons();
         setupSaveButton();
     }
@@ -70,6 +86,7 @@ public class CreateMoodActivity extends AppCompatActivity {
         btnMood5 = findViewById(R.id.btnMood5);
         tvSelectedMood = findViewById(R.id.tvSelectedMood);
         etNote = findViewById(R.id.etNote);
+        createMoodRoot = findViewById(R.id.createMoodRoot);
         btnSaveMood = findViewById(R.id.btnSaveMood);
         progressBar = findViewById(R.id.progressBar);
         authManager = new AuthManager(this);
@@ -122,11 +139,11 @@ public class CreateMoodActivity extends AppCompatActivity {
     }
 
     private void resetMoodButtons() {
-        btnMood1.setAlpha(0.5f);
-        btnMood2.setAlpha(0.5f);
-        btnMood3.setAlpha(0.5f);
-        btnMood4.setAlpha(0.5f);
-        btnMood5.setAlpha(0.5f);
+        btnMood1.setAlpha(0.65f);
+        btnMood2.setAlpha(0.65f);
+        btnMood3.setAlpha(0.65f);
+        btnMood4.setAlpha(0.65f);
+        btnMood5.setAlpha(0.65f);
     }
 
     private void setupSaveButton() {
@@ -162,6 +179,10 @@ public class CreateMoodActivity extends AppCompatActivity {
                                                 .format(new Date())
                                 )
                                 .apply();
+                        prefs.edit()
+                                .putInt("last_mood_score", selectedMoodScore)
+                                .apply();
+
                         // Nakon što je mood spremljen, dohvat random taska
                         fetchRandomTaskAndInsert();
                     }
@@ -171,7 +192,7 @@ public class CreateMoodActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         btnSaveMood.setEnabled(true);
                         Toast.makeText(CreateMoodActivity.this,
-                                "Greška: " + errorMessage, Toast.LENGTH_LONG).show();
+                                "Greška prilikom dodavanja raspoloženja", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -192,7 +213,7 @@ public class CreateMoodActivity extends AppCompatActivity {
                     @Override
                     public void onError(String errorMessage) {
                         Toast.makeText(CreateMoodActivity.this,
-                                "Greška pri dodjeljivanju taska: " + errorMessage, Toast.LENGTH_LONG).show();
+                                "Greška pri dodjeljivanju taska ", Toast.LENGTH_LONG).show();
                         goToDashboard(randomTask);
                     }
                 });
@@ -224,7 +245,7 @@ public class CreateMoodActivity extends AppCompatActivity {
                     @Override
                     public void onError(String errorMessage) {
                         Toast.makeText(CreateMoodActivity.this,
-                                "Greška pri dohvaćanju taskova: " + errorMessage,
+                                "Greška pri dohvaćanju taskova",
                                 Toast.LENGTH_LONG).show();
                         goToDashboard(null);
                     }
@@ -261,17 +282,17 @@ public class CreateMoodActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.menu_add_mood) {
-            startActivity(new Intent(this, CreateMoodActivity.class));
+            startActivity(new android.content.Intent(this, CreateMoodActivity.class));
             return true;
         }
 
         if (id == R.id.menu_mood_history) {
-            startActivity(new Intent(this, MoodListActivity.class));
+            startActivity(new android.content.Intent(this, MoodListActivity.class));
             return true;
         }
 
         if (id == R.id.menu_edit_profile) {
-            startActivity(new Intent(this, EditProfileActivity.class));
+            startActivity(new android.content.Intent(this, EditProfileActivity.class));
             return true;
         }
         if (id == R.id.menu_logout) {
@@ -282,5 +303,15 @@ public class CreateMoodActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void applyMoodBackground() {
+        SharedPreferences prefs = getSharedPreferences("mood_prefs", MODE_PRIVATE);
+        int lastMood = prefs.getInt("last_mood_score", 3); // default = neutralno
+        Log.d("MOOD_BG", "lastMood=" + lastMood);
+        if (lastMood < 3) {
+            createMoodRoot.setBackgroundResource(R.drawable.dashboard_background_gray);
+        } else {
+            createMoodRoot.setBackgroundResource(R.drawable.dashboard_background);
+        }
     }
 }

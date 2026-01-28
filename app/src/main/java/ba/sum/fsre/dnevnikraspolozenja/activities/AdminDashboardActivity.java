@@ -2,14 +2,19 @@ package ba.sum.fsre.dnevnikraspolozenja.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.dnevnikraspolozenja.R;
-
+import com.bumptech.glide.Glide;
+import ba.sum.fsre.dnevnikraspolozenja.R;
+import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
+import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
+import ba.sum.fsre.dnevnikraspolozenja.models.response.ProfileResponse;
 import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
 
 public class AdminDashboardActivity extends AppCompatActivity {
@@ -29,6 +34,12 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
 
         authManager = new AuthManager(this);
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+
+        String token = "Bearer " + authManager.getToken();
+        String userId = authManager.getUserId();
+
+        loadAvatarFromApi(token, userId);
     }
 
     @Override
@@ -59,5 +70,37 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void loadAvatarFromApi(String token, String userId) {
+        RetrofitClient.getInstance()
+                .getApi()
+                .getProfile(token, "eq." + userId)
+                .enqueue(new ApiCallback<ProfileResponse[]>() {
+                    @Override
+                    public void onSuccess(ProfileResponse[] response) {
+                        if (response != null && response.length > 0) {
+                            String avatarUrl = response[0].getAvatarUrl();
+
+                            authManager.saveAvatarUrl(avatarUrl);
+
+                            loadAvatar(avatarUrl);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        // optional fallback
+                    }
+                });
+    }
+    private void loadAvatar(String avatarUrl) {
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+        Log.d("AVATAR_URL", "URL: " + avatarUrl);
+        Glide.with(this)
+                .load(avatarUrl)
+                .placeholder(R.drawable.avatar_border)
+                .error(R.drawable.avatar_border)
+                .circleCrop()
+                .into(imgAvatar);
     }
 }

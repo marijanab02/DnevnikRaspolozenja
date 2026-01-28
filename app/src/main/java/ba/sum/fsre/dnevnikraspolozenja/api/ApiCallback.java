@@ -1,12 +1,10 @@
 package ba.sum.fsre.dnevnikraspolozenja.api;
 
 import android.util.Log;
-
-import java.io.IOException;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import java.io.IOException;
 
 public abstract class ApiCallback<T> implements Callback<T> {
 

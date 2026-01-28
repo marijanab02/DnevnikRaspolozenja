@@ -8,11 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dnevnikraspolozenja.R;
+import ba.sum.fsre.dnevnikraspolozenja.R;
+import ba.sum.fsre.dnevnikraspolozenja.models.CalendarDay;
 
 import java.util.List;
-
-import ba.sum.fsre.dnevnikraspolozenja.models.CalendarDay;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 

@@ -2,7 +2,6 @@ package ba.sum.fsre.dnevnikraspolozenja.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,16 +16,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
-import com.example.dnevnikraspolozenja.R;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import ba.sum.fsre.dnevnikraspolozenja.R;
 import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
 import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
 import ba.sum.fsre.dnevnikraspolozenja.models.request.CreateMentalTaskRequest;
-import ba.sum.fsre.dnevnikraspolozenja.models.response.ProfileResponse;
 import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddMentalTaskActivity extends AppCompatActivity {
 
@@ -53,10 +50,15 @@ public class AddMentalTaskActivity extends AppCompatActivity {
         }
         ImageView imgAvatar = findViewById(R.id.imgAvatar);
 
-        String token = "Bearer " + authManager.getToken();
-        String userId = authManager.getUserId();
-
-        loadAvatarFromApi(token, userId);
+        String avatarUrl = authManager.getAvatarUrl();
+        if (avatarUrl != null) {
+            Glide.with(this)
+                    .load(avatarUrl)
+                    .placeholder(R.drawable.avatar_border)
+                    .error(R.drawable.avatar_border)
+                    .circleCrop()
+                    .into(imgAvatar);
+        }
 
         initViews();
         setupSaveButton();
@@ -133,7 +135,7 @@ public class AddMentalTaskActivity extends AppCompatActivity {
                         setLoading(false);
                         Toast.makeText(
                                 AddMentalTaskActivity.this,
-                                errorMessage,
+                                "Pogreška prilikom dodavanja zadatka",
                                 Toast.LENGTH_LONG
                         ).show();
                     }
@@ -175,32 +177,5 @@ public class AddMentalTaskActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    private void loadAvatar(String avatarUrl) {
-        ImageView imgAvatar = findViewById(R.id.imgAvatar);
-        Log.d("AVATAR_URL", "URL: " + avatarUrl);
-        Glide.with(this)
-                .load(avatarUrl)
-                .placeholder(R.drawable.avatar_border)
-                .error(R.drawable.avatar_border)
-                .circleCrop()
-                .into(imgAvatar);
-    }
-    private void loadAvatarFromApi(String token, String userId) {
-        RetrofitClient.getInstance()
-                .getApi()
-                .getProfile(token, "eq." + userId)
-                .enqueue(new ApiCallback<ProfileResponse[]>() {
-                    @Override
-                    public void onSuccess(ProfileResponse[] response) {
-                        if (response != null && response.length > 0) {
-                            loadAvatar(response[0].getAvatarUrl());
-                        }
-                    }
 
-                    @Override
-                    public void onError(String errorMessage) {
-                        // optional fallback
-                    }
-                });
-    }
 }

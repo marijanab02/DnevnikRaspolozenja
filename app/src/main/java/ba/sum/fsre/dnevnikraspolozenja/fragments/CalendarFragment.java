@@ -15,7 +15,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dnevnikraspolozenja.R;
+import ba.sum.fsre.dnevnikraspolozenja.R;
+import ba.sum.fsre.dnevnikraspolozenja.adapters.CalendarAdapter;
+import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
+import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
+import ba.sum.fsre.dnevnikraspolozenja.models.CalendarDay;
+import ba.sum.fsre.dnevnikraspolozenja.models.response.MoodEntryResponse;
+import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -23,13 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ba.sum.fsre.dnevnikraspolozenja.adapters.CalendarAdapter;
-import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
-import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
-import ba.sum.fsre.dnevnikraspolozenja.models.CalendarDay;
-import ba.sum.fsre.dnevnikraspolozenja.models.response.MoodEntryResponse;
-import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
 
 public class CalendarFragment extends Fragment {
 
@@ -141,13 +140,13 @@ public class CalendarFragment extends Fragment {
 
     private void buildCalendar(MoodEntryResponse[] moods) {
 
-        Map<LocalDate, Integer> moodByDate = new HashMap<>();
+        // Mapiramo svaki datum na listu raspoloženja tog dana
+        Map<LocalDate, List<Integer>> moodByDate = new HashMap<>();
 
         for (MoodEntryResponse mood : moods) {
             try {
                 LocalDate date = LocalDate.parse(mood.getCreatedAt().substring(0, 10));
-                moodByDate.put(date, mood.getMoodScore());
-
+                moodByDate.computeIfAbsent(date, k -> new ArrayList<>()).add(mood.getMoodScore());
             } catch (Exception e) {
                 Log.e(TAG, "Error parsing date: " + mood.getCreatedAt(), e);
             }
@@ -156,10 +155,9 @@ public class CalendarFragment extends Fragment {
         List<CalendarDay> days = new ArrayList<>();
 
         LocalDate firstDayOfMonth = currentMonth.atDay(1);
-        int dayOfWeek = firstDayOfMonth.getDayOfWeek().getValue(); // 1=PON, 7=NED
+        int dayOfWeek = firstDayOfMonth.getDayOfWeek().getValue(); // 1 = PON, 7 = NED
 
-
-
+        // Prazni dani prije prvog dana mjeseca
         for (int i = 1; i < dayOfWeek; i++) {
             days.add(new CalendarDay(null, null));
         }
@@ -168,17 +166,23 @@ public class CalendarFragment extends Fragment {
 
         for (int day = 1; day <= lengthOfMonth; day++) {
             LocalDate date = currentMonth.atDay(day);
-            Integer moodScore = moodByDate.get(date);
+            List<Integer> scores = moodByDate.get(date);
+            Integer moodScore = null;
+
+            if (scores != null && !scores.isEmpty()) {
+                // računamo prosjek raspoloženja i zaokružujemo
+                int sum = 0;
+                for (int s : scores) sum += s;
+                moodScore = Math.round((float) sum / scores.size());
+            }
+
             days.add(new CalendarDay(date, moodScore));
-
-
         }
-
 
         adapter = new CalendarAdapter(days);
         recyclerView.setAdapter(adapter);
-
     }
+
 
     private String emojiForMood(int mood) {
         switch (mood) {

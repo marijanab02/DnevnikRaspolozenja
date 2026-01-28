@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.dnevnikraspolozenja"
+    namespace = "ba.sum.fsre.dnevnikraspolozenja"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.dnevnikraspolozenja"
+        applicationId = "ba.sum.fsre.dnevnikraspolozenja"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -21,6 +21,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

@@ -1,13 +1,12 @@
 package ba.sum.fsre.dnevnikraspolozenja.activities;
 
-import static ba.sum.dnevnikraspolozenja.utils.Constants.BASE_URL;
+import static ba.sum.fsre.dnevnikraspolozenja.utils.Constants.BASE_URL;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,12 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.dnevnikraspolozenja.R;
-
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-
+import ba.sum.fsre.dnevnikraspolozenja.R;
 import ba.sum.fsre.dnevnikraspolozenja.adapters.AvatarAdapter;
 import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
 import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
@@ -29,6 +23,13 @@ import ba.sum.fsre.dnevnikraspolozenja.models.request.ProfileUpdateRequest;
 import ba.sum.fsre.dnevnikraspolozenja.models.request.RegisterRequest;
 import ba.sum.fsre.dnevnikraspolozenja.models.response.AuthResponse;
 import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
+import android.widget.DatePicker;
+import android.net.Uri;
+import android.widget.CheckBox;
+
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -54,6 +55,9 @@ public class RegisterActivity extends AppCompatActivity {
             BASE_URL + "storage/v1/object/public/avatars/avatar_8.png"
     );
 
+    private CheckBox termsCheckbox;
+    private TextView termsLink;
+    private TextView privacyLink;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +85,9 @@ public class RegisterActivity extends AppCompatActivity {
         avatarViewPager.setAdapter(avatarAdapter);
         avatarViewPager.setOffscreenPageLimit(3);
 
+        termsCheckbox = findViewById(R.id.termsCheckbox);
+        termsLink = findViewById(R.id.termsLink);
+        privacyLink = findViewById(R.id.privacyLink);
         avatarViewPager.setPageTransformer((page, position) -> {
             float absPos = Math.abs(position);
 
@@ -113,10 +120,33 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(v -> registerUser());
         backToLoginText.setOnClickListener(v -> finish());
         dobInput.setOnClickListener(v -> showDatePicker());
+        termsLink.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://marijanab02.github.io/CalmPath-legal/terms.html")
+            );
+            startActivity(intent);
+        });
+
+        privacyLink.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://marijanab02.github.io/CalmPath-legal/privacy.html")
+            );
+            startActivity(intent);
+        });
 
     }
 
     private void registerUser() {
+        if (!termsCheckbox.isChecked()) {
+            Toast.makeText(
+                    this,
+                    "You must accept the Terms of Use and Privacy Policy",
+                    Toast.LENGTH_LONG
+            ).show();
+            return;
+        }
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
         String confirmPassword = confirmPasswordInput.getText().toString().trim();
@@ -143,7 +173,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onError(String errorMessage) {
                         setLoading(false);
-                        Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Greška prilikom registracije", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -245,7 +275,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onError(String errorMessage) {
                         Toast.makeText(RegisterActivity.this,
-                                "Profil nije kreiran: " + errorMessage,
+                                "Profil nije kreiran",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

@@ -12,15 +12,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dnevnikraspolozenja.R;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import ba.sum.fsre.dnevnikraspolozenja.R;
 import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
 import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
 import ba.sum.fsre.dnevnikraspolozenja.models.request.UpdateMoodRequest;
 import ba.sum.fsre.dnevnikraspolozenja.models.response.MoodEntryResponse;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.ViewHolder> {
 
@@ -44,6 +47,23 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MoodEntryResponse mood = moods.get(position);
 
+        // --- Formatiranje datuma ---
+        String rawDate = mood.getCreatedAt(); // npr. "2026-01-13T19:00:00"
+        String formattedDate = rawDate; // default ako dođe do greške
+        try {
+            // parsiramo datum iz API formata
+            SimpleDateFormat apiFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+            Date date = apiFormat.parse(rawDate);
+
+            // formatiramo za prikaz
+            SimpleDateFormat displayFormat = new SimpleDateFormat("EEE, dd MMM yyyy, HH:mm", Locale.getDefault());
+            formattedDate = displayFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        holder.tvDate.setText(formattedDate);
+
+        // --- ostatak koda ---
         String moodText;
         switch (mood.getMoodScore()) {
             case 1: moodText = "😢 Vrlo loše (1)"; break;
@@ -54,8 +74,8 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.ViewHolder> {
             default: moodText = "Raspoloženje";
         }
         holder.tvMood.setText(moodText);
-        holder.tvDate.setText(mood.getCreatedAt());
 
+        // note
         if (mood.getNote() == null || mood.getNote().isEmpty()) {
             holder.tvNote.setVisibility(View.GONE);
         } else {
@@ -63,21 +83,21 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.ViewHolder> {
             holder.tvNote.setText(mood.getNote());
         }
 
+        // boje kartice
         int bgColor;
         int textColor;
         switch (mood.getMoodScore()) {
-            case 1: bgColor = 0xFFE57373; textColor = Color.WHITE; break; // crvena
-            case 2: bgColor = 0xFFFFB74D; textColor = Color.BLACK; break; // narančasta
-            case 3: bgColor = 0xFFFFF176; textColor = Color.BLACK; break; // žuta
-            case 4: bgColor = 0xFFAED581; textColor = Color.BLACK; break; // svijetlozelena
-            case 5: bgColor = 0xFF81C784; textColor = Color.WHITE; break; // tamnozelena
-            default: bgColor = 0xFFEEEEEE; textColor = Color.BLACK; // siva
+            case 1: bgColor = 0xFFE57373; textColor = Color.WHITE; break;
+            case 2: bgColor = 0xFFFFB74D; textColor = Color.BLACK; break;
+            case 3: bgColor = 0xFFFFF176; textColor = Color.BLACK; break;
+            case 4: bgColor = 0xFFAED581; textColor = Color.BLACK; break;
+            case 5: bgColor = 0xFF81C784; textColor = Color.WHITE; break;
+            default: bgColor = 0xFFEEEEEE; textColor = Color.BLACK;
         }
         holder.cardMood.setCardBackgroundColor(bgColor);
         holder.tvMood.setTextColor(textColor);
         holder.tvDate.setTextColor(textColor);
         holder.tvNote.setTextColor(textColor);
-
         holder.btnDelete.setOnClickListener(v -> {
             UpdateMoodRequest request = new UpdateMoodRequest(true);
             RetrofitClient.getInstance()

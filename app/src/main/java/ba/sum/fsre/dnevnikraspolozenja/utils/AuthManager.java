@@ -8,6 +8,8 @@ public class AuthManager {
     private static final String KEY_TOKEN = "token";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_USER_ID = "user_id";
+    private static final String KEY_ROLE = "role";
+
     private SharedPreferences prefs;
 
     public AuthManager(Context context) {
@@ -38,5 +40,21 @@ public class AuthManager {
 
     public void logout() {
         prefs.edit().clear().apply();
+    }
+    public void saveAvatarUrl(String url) {
+        prefs.edit()
+                .putString("avatar_url", url)
+                .apply();
+    }
+
+    public String getAvatarUrl() {
+        return prefs.getString("avatar_url", null);
+    }
+    public void saveRole(String role) {
+        prefs.edit().putString(KEY_ROLE, role).apply();
+    }
+
+    public String getRole() {
+        return prefs.getString(KEY_ROLE, null);
     }
 }

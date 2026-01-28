@@ -1,45 +1,49 @@
 package ba.sum.fsre.dnevnikraspolozenja.activities;
 
-import android.Manifest;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.bumptech.glide.Glide;
-import com.example.dnevnikraspolozenja.R;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
+import ba.sum.fsre.dnevnikraspolozenja.R;
 import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
 import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
+
 import ba.sum.fsre.dnevnikraspolozenja.fragments.CalendarFragment;
+
 import ba.sum.fsre.dnevnikraspolozenja.models.request.UpdateUserTaskRequest;
 import ba.sum.fsre.dnevnikraspolozenja.models.response.ProfileResponse;
 import ba.sum.fsre.dnevnikraspolozenja.models.response.UserTaskStatusResponse;
+
 import ba.sum.fsre.dnevnikraspolozenja.notifications.MoodNotificationReceiver;
 import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import java.util.Calendar;
 
 
 public class DashboardActivity extends AppCompatActivity {
@@ -75,6 +79,7 @@ public class DashboardActivity extends AppCompatActivity {
         loadAvatarFromApi(token, userId);
 
         initViews();
+        applyMoodBackground();
         fetchLastTask();
         checkNotificationPermission();
     }
@@ -86,7 +91,11 @@ public class DashboardActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(ProfileResponse[] response) {
                         if (response != null && response.length > 0) {
-                            loadAvatar(response[0].getAvatarUrl());
+                            String avatarUrl = response[0].getAvatarUrl();
+
+                            authManager.saveAvatarUrl(avatarUrl);
+
+                            loadAvatar(avatarUrl);
                         }
                     }
 
@@ -103,6 +112,8 @@ public class DashboardActivity extends AppCompatActivity {
         super.onResume();
         fetchLastTask();
 
+        applyMoodBackground();
+
         if (calendarFragment != null) {
             calendarFragment.refreshCalendar();
         }
@@ -118,17 +129,17 @@ public class DashboardActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.menu_add_mood) {
-            startActivity(new Intent(this, CreateMoodActivity.class));
+            startActivity(new android.content.Intent(this, CreateMoodActivity.class));
             return true;
         }
 
         if (id == R.id.menu_mood_history) {
-            startActivity(new Intent(this, MoodListActivity.class));
+            startActivity(new android.content.Intent(this, MoodListActivity.class));
             return true;
         }
 
         if (id == R.id.menu_edit_profile) {
-            startActivity(new Intent(this, EditProfileActivity.class));
+            startActivity(new android.content.Intent(this, EditProfileActivity.class));
             return true;
         }
         if (id == R.id.menu_logout) {
@@ -136,10 +147,7 @@ public class DashboardActivity extends AppCompatActivity {
             finish();
             return true;
         }
-        if (id == R.id.menu_mood_calendar) {
-            startActivity(new Intent(this, MoodCalendarActivity.class));
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -248,7 +256,7 @@ public class DashboardActivity extends AppCompatActivity {
                     @Override
                     public void onError(String errorMessage) {
                         cbCompleted.setText("Završite zadatak!");
-                        Toast.makeText(DashboardActivity.this, "Greška: " + errorMessage, Toast.LENGTH_LONG).show();
+                        Toast.makeText(DashboardActivity.this, "Greška", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -281,7 +289,7 @@ public class DashboardActivity extends AppCompatActivity {
                     public void onError(String errorMessage) {
                         cbCompleted.setChecked(false);
                         cbCompleted.setEnabled(true);
-                        Toast.makeText(DashboardActivity.this, "Greška pri updateu: " + errorMessage, Toast.LENGTH_LONG).show();
+                        Toast.makeText(DashboardActivity.this, "Greška pri updateu", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -313,7 +321,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
     private void scheduleMoodNotifications() {
-        scheduleNotification(8);
+        scheduleNotification(10);
         scheduleNotification(14);
         scheduleNotification(18);
     }
@@ -357,6 +365,15 @@ public class DashboardActivity extends AppCompatActivity {
                 .into(imgAvatar);
     }
 
-
+    private void applyMoodBackground() {
+        SharedPreferences prefs = getSharedPreferences("mood_prefs", MODE_PRIVATE);
+        int lastMood = prefs.getInt("last_mood_score", 3); // default = neutralno
+        Log.d("MOOD_BG", "lastMood=" + lastMood);
+        if (lastMood < 3) {
+            dashboardRoot.setBackgroundResource(R.drawable.dashboard_background_gray);
+        } else {
+            dashboardRoot.setBackgroundResource(R.drawable.dashboard_background);
+        }
+    }
 
 }

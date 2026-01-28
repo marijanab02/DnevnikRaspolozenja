@@ -11,8 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.dnevnikraspolozenja.R;
-
+import ba.sum.fsre.dnevnikraspolozenja.R;
 import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
 import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
 import ba.sum.fsre.dnevnikraspolozenja.models.request.LoginRequest;
@@ -37,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Ako je korisnik već prijavljen → preskoči login
         if (authManager.isLoggedIn()) {
-            goToMain();
+            redirectByRole();
             return;
         }
 
@@ -84,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onError(String errorMessage) {
                         setLoading(false);
-                        Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Netočni korisnički podaci", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -128,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onSuccess(ProfileResponse[] response) {
                         if (response != null && response.length > 0) {
                             String role = response[0].getRole();
+                            authManager.saveRole(role);
 
                             if ("admin".equals(role)) {
                                 startActivity(new Intent(LoginActivity.this, AdminDashboardActivity.class));
@@ -150,5 +150,15 @@ public class LoginActivity extends AppCompatActivity {
     private void setLoading(boolean isLoading) {
         progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         loginBtn.setEnabled(!isLoading);
+    }
+    private void redirectByRole() {
+        String role = authManager.getRole();
+
+        if ("admin".equals(role)) {
+            startActivity(new Intent(this, AdminDashboardActivity.class));
+        } else {
+            startActivity(new Intent(this, DashboardActivity.class));
+        }
+        finish();
     }
 }

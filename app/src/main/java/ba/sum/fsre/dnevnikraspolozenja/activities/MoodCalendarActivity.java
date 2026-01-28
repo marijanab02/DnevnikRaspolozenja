@@ -10,21 +10,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dnevnikraspolozenja.R;
-
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import ba.sum.fsre.dnevnikraspolozenja.R;
 import ba.sum.fsre.dnevnikraspolozenja.adapters.CalendarAdapter;
 import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
 import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
 import ba.sum.fsre.dnevnikraspolozenja.models.CalendarDay;
 import ba.sum.fsre.dnevnikraspolozenja.models.response.MoodEntryResponse;
 import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -111,7 +111,7 @@ public class MoodCalendarActivity extends AppCompatActivity {
                     public void onError(String errorMessage) {
                         Log.e("MoodCalendar", "Error: " + errorMessage);
                         Toast.makeText(MoodCalendarActivity.this,
-                                "Greška: " + errorMessage,
+                                "Greška",
                                 Toast.LENGTH_LONG).show();
                     }
                 });
@@ -119,31 +119,57 @@ public class MoodCalendarActivity extends AppCompatActivity {
 
     private void buildCalendar(MoodEntryResponse[] moods) {
 
-        Map<LocalDate, Integer> moodByDate = new HashMap<>();
+        // 1. Grupiramo sve moodove po datumu
+        Map<LocalDate, List<Integer>> moodsByDate = new HashMap<>();
 
         for (MoodEntryResponse mood : moods) {
             LocalDate date = LocalDate.parse(mood.getCreatedAt().substring(0, 10));
-            moodByDate.put(date, mood.getMoodScore());
+
+            if (!moodsByDate.containsKey(date)) {
+                moodsByDate.put(date, new ArrayList<>());
+            }
+            moodsByDate.get(date).add(mood.getMoodScore());
         }
 
+        // 2. Izračunamo medijan za svaki datum
+        Map<LocalDate, Integer> medianMoodByDate = new HashMap<>();
+        for (Map.Entry<LocalDate, List<Integer>> entry : moodsByDate.entrySet()) {
+            Log.d("MoodCalendar", "Date: " + entry.getKey() + " Mood List: " + entry.getValue());
+        }
+        for (Map.Entry<LocalDate, List<Integer>> entry : moodsByDate.entrySet()) {
+            List<Integer> scores = entry.getValue();
+            Collections.sort(scores);
+            int size = scores.size();
+            double median;
+            if (size % 2 == 1) {
+                median = scores.get(size / 2);
+            } else {
+                median = (scores.get(size / 2 - 1) + scores.get(size / 2)) / 2.0;
+            }
+            int medianInt = (int) Math.round(median);
+            medianMoodByDate.put(entry.getKey(), medianInt);
+        }
+
+        // 3. Kreiramo listu dana za adapter
         List<CalendarDay> days = new ArrayList<>();
 
         LocalDate firstDayOfMonth = currentMonth.atDay(1);
         int dayOfWeek = firstDayOfMonth.getDayOfWeek().getValue(); // 1=Mon ... 7=Sun
 
         for (int i = 1; i < dayOfWeek; i++) {
-            days.add(new CalendarDay(null, null));
+            days.add(new CalendarDay(null, null)); // prazni dani
         }
 
         int lengthOfMonth = currentMonth.lengthOfMonth();
 
         for (int day = 1; day <= lengthOfMonth; day++) {
             LocalDate date = currentMonth.atDay(day);
-            Integer moodScore = moodByDate.get(date);
-            days.add(new CalendarDay(date, moodScore));
+            Integer medianMood = medianMoodByDate.get(date);
+            days.add(new CalendarDay(date, medianMood));
         }
 
         adapter = new CalendarAdapter(days);
         recyclerView.setAdapter(adapter);
     }
+
 }

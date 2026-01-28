@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,14 +12,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dnevnikraspolozenja.R;
-
-import java.util.List;
-
+import com.bumptech.glide.Glide;
+import ba.sum.fsre.dnevnikraspolozenja.R;
 import ba.sum.fsre.dnevnikraspolozenja.adapters.MentalTaskAdapter;
 import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
 import ba.sum.fsre.dnevnikraspolozenja.models.MentalTask;
 import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +44,18 @@ public class MentalTaskListActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+
+        String avatarUrl = authManager.getAvatarUrl();
+        if (avatarUrl != null) {
+            Glide.with(this)
+                    .load(avatarUrl)
+                    .placeholder(R.drawable.avatar_border)
+                    .error(R.drawable.avatar_border)
+                    .circleCrop()
+                    .into(imgAvatar);
+        }
+
         recyclerView = findViewById(R.id.recyclerMentalTasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -93,7 +107,7 @@ public class MentalTaskListActivity extends AppCompatActivity {
                             recyclerView.getAdapter().notifyItemRemoved(position);
                         } else {
                             Toast.makeText(MentalTaskListActivity.this,
-                                    "Greška pri brisanju: " + response.code(),
+                                    "Greška pri brisanju",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -101,7 +115,7 @@ public class MentalTaskListActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         Toast.makeText(MentalTaskListActivity.this,
-                                "Greška: " + t.getMessage(),
+                                "Greška ",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

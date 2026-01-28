@@ -1,32 +1,38 @@
 package ba.sum.fsre.dnevnikraspolozenja.api;
 
+import ba.sum.fsre.dnevnikraspolozenja.models.MentalTask;
+import ba.sum.fsre.dnevnikraspolozenja.models.request.CreateMentalTaskRequest;
+import ba.sum.fsre.dnevnikraspolozenja.models.request.RegisterRequest;
+
+import ba.sum.fsre.dnevnikraspolozenja.models.request.LoginRequest;
+import ba.sum.fsre.dnevnikraspolozenja.models.request.UpdateUserTaskRequest;
+import ba.sum.fsre.dnevnikraspolozenja.models.request.UserTaskRequest;
+import ba.sum.fsre.dnevnikraspolozenja.models.response.AuthResponse;
+
+import ba.sum.fsre.dnevnikraspolozenja.models.request.ProfileUpdateRequest;
+import ba.sum.fsre.dnevnikraspolozenja.models.response.MentalTaskResponse;
+import ba.sum.fsre.dnevnikraspolozenja.models.response.ProfileResponse;
+
+
+import ba.sum.fsre.dnevnikraspolozenja.models.response.MoodEntryResponse;
+import ba.sum.fsre.dnevnikraspolozenja.models.request.CreateMoodRequest;
+import ba.sum.fsre.dnevnikraspolozenja.models.request.UpdateMoodRequest;
+import ba.sum.fsre.dnevnikraspolozenja.models.response.UserTaskStatusResponse;
+
 
 import java.util.List;
 import java.util.Map;
 
-import ba.sum.fsre.dnevnikraspolozenja.models.MentalTask;
-import ba.sum.fsre.dnevnikraspolozenja.models.request.CreateMentalTaskRequest;
-import ba.sum.fsre.dnevnikraspolozenja.models.request.CreateMoodRequest;
-import ba.sum.fsre.dnevnikraspolozenja.models.request.LoginRequest;
-import ba.sum.fsre.dnevnikraspolozenja.models.request.ProfileUpdateRequest;
-import ba.sum.fsre.dnevnikraspolozenja.models.request.RegisterRequest;
-import ba.sum.fsre.dnevnikraspolozenja.models.request.UpdateMoodRequest;
-import ba.sum.fsre.dnevnikraspolozenja.models.request.UpdateUserTaskRequest;
-import ba.sum.fsre.dnevnikraspolozenja.models.request.UserTaskRequest;
-import ba.sum.fsre.dnevnikraspolozenja.models.response.AuthResponse;
-import ba.sum.fsre.dnevnikraspolozenja.models.response.MentalTaskResponse;
-import ba.sum.fsre.dnevnikraspolozenja.models.response.MoodEntryResponse;
-import ba.sum.fsre.dnevnikraspolozenja.models.response.ProfileResponse;
-import ba.sum.fsre.dnevnikraspolozenja.models.response.UserTaskStatusResponse;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.DELETE;
 import retrofit2.http.QueryMap;
 
 public interface SupabaseAPI {
@@ -151,5 +157,8 @@ public interface SupabaseAPI {
             @Header("Authorization") String token,
             @QueryMap Map<String, String> filters
     );
-
+    @POST("functions/v1/delete-user")
+    Call<ResponseBody> deleteAuthUser(
+            @Header("Authorization") String token
+    );
 }

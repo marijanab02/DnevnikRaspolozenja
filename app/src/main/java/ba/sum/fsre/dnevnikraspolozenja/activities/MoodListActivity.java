@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,16 +12,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dnevnikraspolozenja.R;
-
-import java.util.Arrays;
-import java.util.List;
-
+import com.bumptech.glide.Glide;
+import ba.sum.fsre.dnevnikraspolozenja.R;
 import ba.sum.fsre.dnevnikraspolozenja.adapters.MoodAdapter;
 import ba.sum.fsre.dnevnikraspolozenja.api.ApiCallback;
 import ba.sum.fsre.dnevnikraspolozenja.api.RetrofitClient;
 import ba.sum.fsre.dnevnikraspolozenja.models.response.MoodEntryResponse;
 import ba.sum.fsre.dnevnikraspolozenja.utils.AuthManager;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class MoodListActivity extends AppCompatActivity {
 
@@ -43,6 +44,18 @@ public class MoodListActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+
+        String avatarUrl = authManager.getAvatarUrl();
+        if (avatarUrl != null) {
+            Glide.with(this)
+                    .load(avatarUrl)
+                    .placeholder(R.drawable.avatar_border)
+                    .error(R.drawable.avatar_border)
+                    .circleCrop()
+                    .into(imgAvatar);
+        }
+
         loadMoodEntries();
     }
 
@@ -70,7 +83,7 @@ public class MoodListActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(String errorMessage) {
-                        Toast.makeText(MoodListActivity.this, "Greška: " + errorMessage, Toast.LENGTH_LONG).show();
+                        Toast.makeText(MoodListActivity.this, "Greška pri učitavanju ", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -84,17 +97,17 @@ public class MoodListActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.menu_add_mood) {
-            startActivity(new Intent(this, CreateMoodActivity.class));
+            startActivity(new android.content.Intent(this, CreateMoodActivity.class));
             return true;
         }
 
         if (id == R.id.menu_mood_history) {
-            startActivity(new Intent(this, MoodListActivity.class));
+            startActivity(new android.content.Intent(this, MoodListActivity.class));
             return true;
         }
 
         if (id == R.id.menu_edit_profile) {
-            startActivity(new Intent(this, EditProfileActivity.class));
+            startActivity(new android.content.Intent(this, EditProfileActivity.class));
             return true;
         }
         if (id == R.id.menu_logout) {

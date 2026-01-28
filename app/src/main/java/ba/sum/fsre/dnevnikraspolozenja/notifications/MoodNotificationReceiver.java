@@ -11,7 +11,7 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.dnevnikraspolozenja.R;
+import ba.sum.fsre.dnevnikraspolozenja.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
