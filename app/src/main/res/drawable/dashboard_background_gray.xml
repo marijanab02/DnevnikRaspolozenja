@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Gradient pozadina -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#545657"
+                android:endColor="#FFE3F2FD"
+                android:angle="270"/>
+        </shape>
+    </item>
+
+    <!-- Mutni overlay -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#80FFFFFF"/> <!-- bijela sa 50% prozirnosti -->
+        </shape>
+    </item>
+
+</layer-list>

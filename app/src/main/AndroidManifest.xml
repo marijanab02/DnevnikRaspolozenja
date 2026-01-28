@@ -10,39 +10,49 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="DnevnikRaspoloženja"
+        android:label="CalmPath"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DnevnikRaspolozenja">
         <activity
-            android:name=".activities.MoodCalendarActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.MoodCalendarActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".activities.MoodListActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.MoodListActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".activities.CreateMoodActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.CreateMoodActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".activities.EditProfileActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.EditProfileActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".activities.RegisterActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.RegisterActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".activities.DashboardActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.DashboardActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".activities.AddMentalTaskActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.AddMentalTaskActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".activities.AdminDashboardActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.AdminDashboardActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".activities.MentalTaskListActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.MentalTaskListActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.activities.LoginActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,7 +62,7 @@
         </activity>
 
         <receiver
-            android:name=".notifications.MoodNotificationReceiver"
+            android:name="ba.sum.fsre.dnevnikraspolozenja.notifications.MoodNotificationReceiver"
             android:enabled="true"
             android:exported="false" />
     </application>

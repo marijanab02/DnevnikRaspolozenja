@@ -16,8 +16,4 @@
     <item
         android:id="@+id/menu_logout"
         android:title=" ➜]   Odjavi se"/>
-
-    <item
-        android:id="@+id/menu_mood_calendar"
-        android:title="Kalendar raspoloženja" />
 </menu>
